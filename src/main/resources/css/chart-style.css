@@ -1,0 +1,17 @@
+/* 为每个数据系列分别设置颜色 */
+.bar-chart .data0 .chart-bar {
+    -fx-bar-fill: rgba(255, 0, 0, 0.5); /* 红色透明 */
+}
+
+.bar-chart .data1 .chart-bar {
+    -fx-bar-fill: blue; /* 第二个数据系列使用蓝色 */
+}
+
+.bar-chart .data2 .chart-bar {
+    -fx-bar-fill: green; /* 示例：第三个数据系列使用绿色 */
+}
+
+/* 设置柱的宽度 */
+.bar-chart .chart-bar {
+    -fx-bar-width: 15px; /* 设置柱的宽度 */
+}

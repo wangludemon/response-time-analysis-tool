@@ -43,3 +43,10 @@
 .resource-clicked-change-all:hover {
     -fx-background-color: rgb(255, 218, 105);
 }
+
+.bar-chart .series0 .chart-bar {
+    -fx-bar-fill: red;
+}
+.bar-chart .series1 .chart-bar {
+    -fx-bar-fill: blue;
+}

@@ -8,7 +8,11 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 
+
+<?import javafx.collections.FXCollections?>
 <VBox style="-fx-background-color: whitie;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.demo.tool.Controller">
    <children>
       <HBox prefHeight="52.0" prefWidth="1094.0">
@@ -490,295 +494,369 @@
                   </VBox>
                </children>
             </HBox>
-            <VBox fx:id="page3" prefHeight="614.0" prefWidth="1200.0" visible="false">
+            <VBox fx:id="page3" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                <children>
-                  <HBox prefHeight="536.0" prefWidth="1029.0">
+                  <HBox prefHeight="614.0" prefWidth="1000.0" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                      <children>
-                        <VBox prefHeight="468.0" prefWidth="238.0">
+                        <VBox prefHeight="450.0" prefWidth="500.0" style="-fx-background-color: rgb(243, 243, 243);" styleClass="panel-default" stylesheets="@../../../css/bootstrapfx.css" >
+                           <HBox prefHeight="350.0" prefWidth="500.0" style="-fx-background-color: rgb(243, 243, 243);" styleClass="panel-default" stylesheets="@../../../css/bootstrapfx.css" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                              <VBox alignment="CENTER" prefHeight="614.0" prefWidth="200.0" style="-fx-background-color: rgb(243, 243, 243);" styleClass="panel-default" stylesheets="@../../../css/bootstrapfx.css" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <Label text="Parameter Setting" alignment="CENTER" >
+                                       <padding>
+                                          <Insets top="20" right="10" bottom="10" left="10"/>
+                                       </padding>
+                                       <font>
+                                          <Font size="14" />
+                                       </font>
+                                    </Label>
+                                    <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
+                                       <children>
+                                          <Label alignment="CENTER" maxHeight="1.7976931348623157E308" text="Systems" textAlignment="RIGHT" textOverrun="CLIP">
+                                             <padding>
+                                                <Insets left="7.0" />
+                                             </padding>
+                                          </Label>
+                                          <TextField fx:id="sysNum_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="96.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
+                                             <StackPane.margin>
+                                                <Insets right="7.0" />
+                                             </StackPane.margin>
+                                             <cursor>
+                                                <Cursor fx:constant="NONE" />
+                                             </cursor>
+                                          </TextField>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                       <styleClass>
+                                          <String fx:value="round-background" />
+                                          <String fx:value="basic-pane" />
+                                       </styleClass>
+                                    </StackPane>
+                                    <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
+                                       <children>
+                                          <Label alignment="CENTER" maxHeight="1.7976931348623157E308" text="Cores" textAlignment="RIGHT" textOverrun="CLIP">
+                                             <padding>
+                                                <Insets left="7.0" />
+                                             </padding>
+                                          </Label>
+                                          <TextField fx:id="coreNum_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="96.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
+                                             <StackPane.margin>
+                                                <Insets right="7.0" />
+                                             </StackPane.margin>
+                                             <cursor>
+                                                <Cursor fx:constant="NONE" />
+                                             </cursor>
+                                          </TextField>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                       <styleClass>
+                                          <String fx:value="round-background" />
+                                          <String fx:value="basic-pane" />
+                                       </styleClass>
+                                    </StackPane>
+                                    <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
+                                       <children>
+                                          <Label alignment="CENTER" maxHeight="1.7976931348623157E308" text="Tasks">
+                                             <padding>
+                                                <Insets left="7.0" />
+                                             </padding>
+                                          </Label>
+                                          <TextField fx:id="taskNum_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="96.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
+                                             <cursor>
+                                                <Cursor fx:constant="NONE" />
+                                             </cursor>
+                                             <StackPane.margin>
+                                                <Insets right="7.0" />
+                                             </StackPane.margin>
+                                          </TextField>
+                                       </children>
+                                       <styleClass>
+                                          <String fx:value="basic-pane" />
+                                          <String fx:value="round-background" />
+                                       </styleClass>
+                                    </StackPane>
+                                    <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
+                                       <children>
+                                          <Label alignment="CENTER" maxHeight="1.7976931348623157E308" text="Utilization">
+                                             <padding>
+                                                <Insets left="7.0" />
+                                             </padding>
+                                          </Label>
+                                          <TextField fx:id="utility_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="96.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
+                                             <cursor>
+                                                <Cursor fx:constant="NONE" />
+                                             </cursor>
+                                             <StackPane.margin>
+                                                <Insets right="7.0" />
+                                             </StackPane.margin>
+                                             <tooltip>
+                                                <Tooltip fx:id="tipsForU_batch" text="The range is from 10% to 70% of the core counts" />
+                                             </tooltip>
+                                          </TextField>
+                                       </children>
+                                       <styleClass>
+                                          <String fx:value="basic-pane" />
+                                          <String fx:value="round-background" />
+                                       </styleClass>
+                                    </StackPane>
+                                    <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
+                                       <children>
+                                          <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefHeight="50.0" prefWidth="104.0" text="Period range (ms)" wrapText="true">
+                                             <padding>
+                                                <Insets left="7.0" />
+                                             </padding>
+                                          </Label>
+                                          <TextField fx:id="rangeT1_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="45.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
+                                             <cursor>
+                                                <Cursor fx:constant="NONE" />
+                                             </cursor>
+                                             <StackPane.margin>
+                                                <Insets right="58.0" />
+                                             </StackPane.margin>
+                                          </TextField>
+                                          <TextField fx:id="rangeT2_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="45.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
+                                             <cursor>
+                                                <Cursor fx:constant="NONE" />
+                                             </cursor>
+                                             <StackPane.margin>
+                                                <Insets right="7.0" />
+                                             </StackPane.margin>
+                                          </TextField>
+                                       </children>
+                                       <styleClass>
+                                          <String fx:value="basic-pane" />
+                                          <String fx:value="round-background" />
+                                       </styleClass>
+                                    </StackPane>
+                                    <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
+                                       <children>
+                                          <Label maxHeight="1.7976931348623157E308" prefHeight="56.0" prefWidth="125.0" text="Resources" wrapText="true">
+                                             <padding>
+                                                <Insets left="7.0" />
+                                             </padding>
+                                          </Label>
+                                          <TextField fx:id="resourceNum_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="96.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
+                                             <cursor>
+                                                <Cursor fx:constant="NONE" />
+                                             </cursor>
+                                             <StackPane.margin>
+                                                <Insets right="7.0" />
+                                             </StackPane.margin>
+                                          </TextField>
+                                       </children>
+                                       <styleClass>
+                                          <String fx:value="basic-pane" />
+                                          <String fx:value="round-background" />
+                                       </styleClass>
+                                    </StackPane>
+                                    <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
+                                       <children>
+                                          <Label maxHeight="1.7976931348623157E308" prefHeight="56.0" prefWidth="125.0" text="Resource sharing factor" wrapText="true">
+                                             <padding>
+                                                <Insets left="7.0" />
+                                             </padding>
+                                          </Label>
+                                          <TextField fx:id="rsf_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="96.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
+                                             <cursor>
+                                                <Cursor fx:constant="NONE" />
+                                             </cursor>
+                                             <StackPane.margin>
+                                                <Insets right="7.0" />
+                                             </StackPane.margin>
+                                          </TextField>
+                                       </children>
+                                       <styleClass>
+                                          <String fx:value="basic-pane" />
+                                          <String fx:value="round-background" />
+                                       </styleClass>
+                                    </StackPane>
+                                    <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
+                                       <children>
+                                          <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefHeight="56.0" prefWidth="125.0" text="Resource Access Frequency " wrapText="true">
+                                             <padding>
+                                                <Insets left="7.0" />
+                                             </padding>
+                                          </Label>
+                                          <TextField fx:id="maxAccess_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="96.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
+                                             <cursor>
+                                                <Cursor fx:constant="NONE" />
+                                             </cursor>
+                                             <StackPane.margin>
+                                                <Insets right="7.0" />
+                                             </StackPane.margin>
+                                          </TextField>
+                                       </children>
+                                       <styleClass>
+                                          <String fx:value="basic-pane" />
+                                          <String fx:value="round-background" />
+                                       </styleClass>
+                                    </StackPane>
+                                    <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
+                                       <children>
+                                          <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefWidth="95.0" text="Critical section (us)" wrapText="true">
+                                             <padding>
+                                                <Insets left="7.0" />
+                                             </padding>
+                                          </Label>
+                                          <TextField fx:id="rangeCSL1_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="45.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
+                                             <cursor>
+                                                <Cursor fx:constant="NONE" />
+                                             </cursor>
+                                             <StackPane.margin>
+                                                <Insets right="58.0" />
+                                             </StackPane.margin>
+                                          </TextField>
+                                          <TextField fx:id="rangeCSL2_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="45.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
+                                             <cursor>
+                                                <Cursor fx:constant="NONE" />
+                                             </cursor>
+                                             <StackPane.margin>
+                                                <Insets right="7.0" />
+                                             </StackPane.margin>
+                                          </TextField>
+                                       </children>
+                                       <styleClass>
+                                          <String fx:value="basic-pane" />
+                                          <String fx:value="round-background" />
+                                       </styleClass>
+                                    </StackPane>
+                                    <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
+                                       <children>
+                                          <Label alignment="CENTER" maxHeight="1.7976931348623157E308" text="Allocation">
+                                             <padding>
+                                                <Insets left="7.0" />
+                                             </padding>
+                                          </Label>
+                                          <ComboBox fx:id="allocation_batch" focusTraversable="false" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="33.0" prefWidth="96.0" StackPane.alignment="CENTER_RIGHT">
+                                             <StackPane.margin>
+                                                <Insets right="7.0" />
+                                             </StackPane.margin>
+                                          </ComboBox>
+                                       </children>
+                                       <styleClass>
+                                          <String fx:value="basic-pane" />
+                                          <String fx:value="round-background" />
+                                       </styleClass>
+                                    </StackPane>
+                                    <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
+                                       <children>
+                                          <Label alignment="CENTER" maxHeight="1.7976931348623157E308" text="Priority ordering">
+                                             <padding>
+                                                <Insets left="7.0" />
+                                             </padding>
+                                          </Label>
+                                          <ComboBox fx:id="priority_batch" focusTraversable="false" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="33.0" prefWidth="96.0" StackPane.alignment="CENTER_RIGHT">
+                                             <StackPane.margin>
+                                                <Insets right="7.0" />
+                                             </StackPane.margin>
+                                          </ComboBox>
+                                       </children>
+                                       <styleClass>
+                                          <String fx:value="basic-pane" />
+                                          <String fx:value="round-background" />
+                                       </styleClass>
+                                    </StackPane>
+
+
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" prefHeight="614.0" prefWidth="200.0" spacing="15"  style="-fx-background-color: rgb(243, 243, 243);" styleClass="panel-default" stylesheets="@../../../css/bootstrapfx.css" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+
+                                 <children>
+                                    <Label text="Method Choice" alignment="CENTER">
+                                       <padding>
+                                          <Insets top="20" right="10" bottom="10" left="10"/>
+                                       </padding>
+                                       <font>
+                                          <Font size="14" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="methodComboBox" maxWidth="200">
+                                       <items>
+                                          <FXCollections fx:factory="observableArrayList">
+                                             <String fx:value="MSRP_Original"/>
+                                             <String fx:value="MSRP_Holistic"/>
+                                             <String fx:value="PWLP_Holistic"/>
+                                             <String fx:value="Mrsp_Original"/>
+                                             <String fx:value="Mrsp_Holistic"/>
+                                             <String fx:value="Dynamic"/>
+                                             <!-- 其他方法 -->
+                                          </FXCollections>
+                                       </items>
+                                    </ComboBox>
+                                    <HBox spacing="10" alignment="CENTER" style="-fx-background-color: rgb(243, 243, 243);" styleClass="panel-default" stylesheets="@../../../css/bootstrapfx.css" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                                       <Button text="Add" onAction="#handleAddMethod" styleClass="btn btn-primary"/>
+                                       <Button text="Remove" onAction="#handleRemoveMethod" styleClass="btn btn-danger"/>
+                                    </HBox>
+                                    <ListView fx:id="selectedMethodsList" VBox.vgrow="ALWAYS" />
+
+                                 </children>
+                              </VBox>
+                           </HBox>
+                           <HBox alignment="CENTER" prefHeight="100.0" prefWidth="400.0">
+                              <children>
+                                 <Button fx:id="batchTest" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#onBatchTest" prefHeight="40.0" prefWidth="120.0" text="Batch Testing" textAlignment="CENTER" />
+                                 <Button fx:id="reset" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#onReset" prefHeight="40.0" prefWidth="120.0" text="Reset" textAlignment="CENTER" />
+                              </children>
+                           </HBox>
+                        </VBox>
+
+                        <VBox prefHeight="614.0" prefWidth="600.0" alignment="CENTER" style="-fx-background-color: rgb(243, 243, 243);" styleClass="panel-default" stylesheets="@../../../css/bootstrapfx.css" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                            <children>
-                              <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
-                                 <children>
-                                    <Label alignment="CENTER" maxHeight="1.7976931348623157E308" text="Systems" textAlignment="RIGHT" textOverrun="CLIP">
-                                       <padding>
-                                          <Insets left="7.0" />
-                                       </padding>
-                                    </Label>
-                                    <TextField fx:id="sysNum_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="96.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
-                                       <StackPane.margin>
-                                          <Insets right="7.0" />
-                                       </StackPane.margin>
-                                       <cursor>
-                                          <Cursor fx:constant="NONE" />
-                                       </cursor>
-                                    </TextField>
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                                 <styleClass>
-                                    <String fx:value="round-background" />
-                                    <String fx:value="basic-pane" />
-                                 </styleClass>
-                              </StackPane>
-                              <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
-                                 <children>
-                                    <Label alignment="CENTER" maxHeight="1.7976931348623157E308" text="Cores" textAlignment="RIGHT" textOverrun="CLIP">
-                                       <padding>
-                                          <Insets left="7.0" />
-                                       </padding>
-                                    </Label>
-                                    <TextField fx:id="coreNum_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="96.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
-                                       <StackPane.margin>
-                                          <Insets right="7.0" />
-                                       </StackPane.margin>
-                                       <cursor>
-                                          <Cursor fx:constant="NONE" />
-                                       </cursor>
-                                    </TextField>
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                                 <styleClass>
-                                    <String fx:value="round-background" />
-                                    <String fx:value="basic-pane" />
-                                 </styleClass>
-                              </StackPane>
-                              <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
-                                 <children>
-                                    <Label alignment="CENTER" maxHeight="1.7976931348623157E308" text="Tasks">
-                                       <padding>
-                                          <Insets left="7.0" />
-                                       </padding>
-                                    </Label>
-                                    <TextField fx:id="taskNum_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="96.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
-                                       <cursor>
-                                          <Cursor fx:constant="NONE" />
-                                       </cursor>
-                                       <StackPane.margin>
-                                          <Insets right="7.0" />
-                                       </StackPane.margin>
-                                    </TextField>
-                                 </children>
-                                 <styleClass>
-                                    <String fx:value="basic-pane" />
-                                    <String fx:value="round-background" />
-                                 </styleClass>
-                              </StackPane>
-                              <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
-                                 <children>
-                                    <Label alignment="CENTER" maxHeight="1.7976931348623157E308" text="Utilization">
-                                       <padding>
-                                          <Insets left="7.0" />
-                                       </padding>
-                                    </Label>
-                                    <TextField fx:id="utility_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="96.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
-                                       <cursor>
-                                          <Cursor fx:constant="NONE" />
-                                       </cursor>
-                                       <StackPane.margin>
-                                          <Insets right="7.0" />
-                                       </StackPane.margin>
-                                       <tooltip>
-                                          <Tooltip fx:id="tipsForU_batch" text="The range is from 10% to 70% of the core counts" />
-                                       </tooltip>
-                                    </TextField>
-                                 </children>
-                                 <styleClass>
-                                    <String fx:value="basic-pane" />
-                                    <String fx:value="round-background" />
-                                 </styleClass>
-                              </StackPane>
-                              <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
-                                 <children>
-                                    <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefHeight="50.0" prefWidth="104.0" text="Period range (ms)" wrapText="true">
-                                       <padding>
-                                          <Insets left="7.0" />
-                                       </padding>
-                                    </Label>
-                                    <TextField fx:id="rangeT1_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="45.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
-                                       <cursor>
-                                          <Cursor fx:constant="NONE" />
-                                       </cursor>
-                                       <StackPane.margin>
-                                          <Insets right="58.0" />
-                                       </StackPane.margin>
-                                    </TextField>
-                                    <TextField fx:id="rangeT2_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="45.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
-                                       <cursor>
-                                          <Cursor fx:constant="NONE" />
-                                       </cursor>
-                                       <StackPane.margin>
-                                          <Insets right="7.0" />
-                                       </StackPane.margin>
-                                    </TextField>
-                                 </children>
-                                 <styleClass>
-                                    <String fx:value="basic-pane" />
-                                    <String fx:value="round-background" />
-                                 </styleClass>
-                              </StackPane>
-                              <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
-                                 <children>
-                                    <Label maxHeight="1.7976931348623157E308" prefHeight="56.0" prefWidth="125.0" text="Resources" wrapText="true">
-                                       <padding>
-                                          <Insets left="7.0" />
-                                       </padding>
-                                    </Label>
-                                    <TextField fx:id="resourceNum_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="96.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
-                                       <cursor>
-                                          <Cursor fx:constant="NONE" />
-                                       </cursor>
-                                       <StackPane.margin>
-                                          <Insets right="7.0" />
-                                       </StackPane.margin>
-                                    </TextField>
-                                 </children>
-                                 <styleClass>
-                                    <String fx:value="basic-pane" />
-                                    <String fx:value="round-background" />
-                                 </styleClass>
-                              </StackPane>
-                              <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
-                                 <children>
-                                    <Label maxHeight="1.7976931348623157E308" prefHeight="56.0" prefWidth="125.0" text="Resource sharing factor" wrapText="true">
-                                       <padding>
-                                          <Insets left="7.0" />
-                                       </padding>
-                                    </Label>
-                                    <TextField fx:id="rsf_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="96.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
-                                       <cursor>
-                                          <Cursor fx:constant="NONE" />
-                                       </cursor>
-                                       <StackPane.margin>
-                                          <Insets right="7.0" />
-                                       </StackPane.margin>
-                                    </TextField>
-                                 </children>
-                                 <styleClass>
-                                    <String fx:value="basic-pane" />
-                                    <String fx:value="round-background" />
-                                 </styleClass>
-                              </StackPane>
-                              <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
-                                 <children>
-                                    <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefHeight="56.0" prefWidth="125.0" text="Resource Access Frequency " wrapText="true">
-                                       <padding>
-                                          <Insets left="7.0" />
-                                       </padding>
-                                    </Label>
-                                    <TextField fx:id="maxAccess_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="96.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
-                                       <cursor>
-                                          <Cursor fx:constant="NONE" />
-                                       </cursor>
-                                       <StackPane.margin>
-                                          <Insets right="7.0" />
-                                       </StackPane.margin>
-                                    </TextField>
-                                 </children>
-                                 <styleClass>
-                                    <String fx:value="basic-pane" />
-                                    <String fx:value="round-background" />
-                                 </styleClass>
-                              </StackPane>
-                              <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
-                                 <children>
-                                    <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefWidth="95.0" text="Critical section (us)" wrapText="true">
-                                       <padding>
-                                          <Insets left="7.0" />
-                                       </padding>
-                                    </Label>
-                                    <TextField fx:id="rangeCSL1_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="45.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
-                                       <cursor>
-                                          <Cursor fx:constant="NONE" />
-                                       </cursor>
-                                       <StackPane.margin>
-                                          <Insets right="58.0" />
-                                       </StackPane.margin>
-                                    </TextField>
-                                    <TextField fx:id="rangeCSL2_batch" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="45.0" styleClass="no-light" StackPane.alignment="CENTER_RIGHT">
-                                       <cursor>
-                                          <Cursor fx:constant="NONE" />
-                                       </cursor>
-                                       <StackPane.margin>
-                                          <Insets right="7.0" />
-                                       </StackPane.margin>
-                                    </TextField>
-                                 </children>
-                                 <styleClass>
-                                    <String fx:value="basic-pane" />
-                                    <String fx:value="round-background" />
-                                 </styleClass>
-                              </StackPane>
-                              <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
-                                 <children>
-                                    <Label alignment="CENTER" maxHeight="1.7976931348623157E308" text="Allocation">
-                                       <padding>
-                                          <Insets left="7.0" />
-                                       </padding>
-                                    </Label>
-                                    <ComboBox fx:id="allocation_batch" focusTraversable="false" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="33.0" prefWidth="96.0" StackPane.alignment="CENTER_RIGHT">
-                                       <StackPane.margin>
-                                          <Insets right="7.0" />
-                                       </StackPane.margin>
-                                    </ComboBox>
-                                 </children>
-                                 <styleClass>
-                                    <String fx:value="basic-pane" />
-                                    <String fx:value="round-background" />
-                                 </styleClass>
-                              </StackPane>
-                              <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0">
-                                 <children>
-                                    <Label alignment="CENTER" maxHeight="1.7976931348623157E308" text="Priority ordering">
-                                       <padding>
-                                          <Insets left="7.0" />
-                                       </padding>
-                                    </Label>
-                                    <ComboBox fx:id="priority_batch" focusTraversable="false" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="33.0" prefWidth="96.0" StackPane.alignment="CENTER_RIGHT">
-                                       <StackPane.margin>
-                                          <Insets right="7.0" />
-                                       </StackPane.margin>
-                                    </ComboBox>
-                                 </children>
-                                 <styleClass>
-                                    <String fx:value="basic-pane" />
-                                    <String fx:value="round-background" />
-                                 </styleClass>
-                              </StackPane>
+                              <Label text="Result Display" alignment="CENTER" style="-fx-font-size: 18px;">
+                                 <padding>
+                                    <Insets top="10" right="10" bottom="10" left="10"/>
+                                 </padding>
+                                 <font>
+                                    <Font size="14" />
+                                 </font>
+                              </Label>
+                              <!-- 使用TabPane作为图表展示区 -->
+                              <TabPane fx:id="chartTabPane" VBox.vgrow="ALWAYS" >
+                                 <style>
+                                    -fx-background-color: #ffffff; /* 整个TabPane的背景色 */
+                                 </style>
+                                 <tabs>
+                                    <Tab text="Low Mode" closable="false" style="-fx-font-size: 15px;">
+
+                                       <content>
+
+                                          <BarChart fx:id="barChart1" title="Schedulability in Low Mode" prefWidth="500" prefHeight="450" style="-fx-font-size: 15px;" >
+                                             <xAxis><CategoryAxis/></xAxis>
+                                             <yAxis><NumberAxis autoRanging="false" lowerBound="0"  upperBound="1" tickUnit="0.1"/></yAxis>
+                                          </BarChart>
+                                       </content>
+                                    </Tab>
+                                    <Tab text="High Mode" closable="false" style="-fx-font-size: 15px;">
+                                       <content>
+                                          <BarChart fx:id="barChart2"  title="Schedulability in High Mode" prefWidth="500" prefHeight="450" style="-fx-font-size: 15px;" >
+                                             <xAxis><CategoryAxis/></xAxis>
+                                             <yAxis><NumberAxis autoRanging="false" lowerBound="0" upperBound="1" tickUnit="0.1"/></yAxis>
+                                          </BarChart>
+                                       </content>
+                                    </Tab>
+                                    <Tab text="Mode Switch" closable="false" style="-fx-font-size: 15px;">
+                                       <content>
+                                          <BarChart fx:id="barChart3"  title="Schedulability in Mode Switch" prefWidth="500" prefHeight="450" style="-fx-font-size: 15px;" >
+                                             <xAxis><CategoryAxis/></xAxis>
+                                             <yAxis><NumberAxis autoRanging="false" lowerBound="0" upperBound="1" tickUnit="0.1"/></yAxis>
+                                          </BarChart>
+                                       </content>
+                                    </Tab>
+                                 </tabs>
+                              </TabPane>
                            </children>
                         </VBox>
-                        <BarChart fx:id="barChart1" prefHeight="536.0" prefWidth="360.0">
-                          <xAxis>
-                            <CategoryAxis side="BOTTOM" />
-                          </xAxis>
-                          <yAxis>
-                            <NumberAxis side="LEFT" />
-                          </yAxis>
-                        </BarChart>
-                        <BarChart fx:id="barChart2" prefHeight="536.0" prefWidth="360.0">
-                          <xAxis>
-                            <CategoryAxis side="BOTTOM" />
-                          </xAxis>
-                          <yAxis>
-                            <NumberAxis side="LEFT" />
-                          </yAxis>
-                        </BarChart>
-                        <BarChart fx:id="barChart3" prefHeight="536.0" prefWidth="360.0">
-                          <xAxis>
-                            <CategoryAxis side="BOTTOM" />
-                          </xAxis>
-                          <yAxis>
-                            <NumberAxis side="LEFT" />
-                          </yAxis>
-                        </BarChart>
+
+
+
+
                      </children>
                   </HBox>
-                  <Pane prefHeight="69.0" prefWidth="667.0">
-                     <children>
-                        <Button fx:id="batchTest" layoutX="535.0" layoutY="15.0" mnemonicParsing="false" onMouseClicked="#onBatchTest" prefHeight="40.0" prefWidth="131.0" text="Batch Testing" textAlignment="CENTER" />
-                     </children>
-                  </Pane>
                </children>
             </VBox>
          </children>

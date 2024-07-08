@@ -6,6 +6,7 @@ import com.demo.tool.responsetimeanalysis.entity.Resource;
 import com.demo.tool.responsetimeanalysis.entity.SporadicTask;
 import com.demo.tool.responsetimeanalysis.utils.Factors;
 import com.demo.tool.responsetimeanalysis.utils.Pair;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -13,9 +14,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -31,14 +35,20 @@ import org.kordamp.bootstrapfx.BootstrapFX;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
+import java.util.stream.IntStream;
 
 import static com.demo.tool.Utils.judgeFloat;
 import static com.demo.tool.Utils.judgeInteger;
+import javafx.scene.Node;
 
 
 public class Controller {
+
+    @FXML private ComboBox<String> methodComboBox;
+    @FXML private ListView<String> selectedMethodsList;
+    private List<Map<String, Double>> result; // 存储所有结果数据
+    private int currentIndex = 0; // 当前图表结果的索引
 
     public static Logger log = LogManager.getLogger();
 
@@ -165,6 +175,8 @@ public class Controller {
     private TextField text_FULL_CONTEXT_SWITCH2;
     @FXML
     private Factors factors;
+
+
     private Factors batchTestFactors;
     private Pair<ArrayList<ArrayList<SporadicTask>>, ArrayList<Resource>> pair;
     private Pair<ArrayList<ArrayList<SporadicTask>>, ArrayList<Resource>> batchTestPair;
@@ -174,6 +186,9 @@ public class Controller {
     private int taskClickCount = 1;
     private int currentShowingResource = -1;
     private int resourceClickCount = 0;
+
+    @FXML
+    private Pagination pagination;
 
     /**
      * 判断参数是否合法并传递为double，不合法为Double.MIN_VALUE
@@ -244,6 +259,9 @@ public class Controller {
 
         //test
         test0();
+
+
+
         log.info("Controller initialization completed");
     }
 
@@ -884,6 +902,7 @@ public class Controller {
         page12.setVisible(false);
         page2.setVisible(false);
         page3.setVisible(true);
+
     }
 
     private void initConfig() {
@@ -908,6 +927,35 @@ public class Controller {
         }
     }
 
+
+
+
+    @FXML
+    private void handleAddMethod() {
+        String selectedMethod = methodComboBox.getValue();
+        if (selectedMethod != null && !selectedMethod.isEmpty() && !selectedMethodsList.getItems().contains(selectedMethod)) {
+            selectedMethodsList.getItems().add(selectedMethod);
+        }
+    }
+
+    @FXML
+    private void handleRemoveMethod() {
+        int selectedIndex = selectedMethodsList.getSelectionModel().getSelectedIndex();
+        if (selectedIndex >= 0) {
+            selectedMethodsList.getItems().remove(selectedIndex);
+        }
+    }
+
+
+    @FXML
+    private void onReset(){
+        barChart1.getData().clear();
+        barChart2.getData().clear();
+        barChart3.getData().clear();
+    }
+
+
+    /** batch test setting -> input + method -> system number Analysis test**/
     @FXML
     private void onBatchTest() {
         initBatchTest();
@@ -949,45 +997,184 @@ public class Controller {
                 batchTestFactors.RESOURCE_SHARING_FACTOR == -1 || batchTestFactors.ALLOCATION == null)
             return;
 
+        onReset();
+
+
         var batchTestAnalyzer = new Analysis();
 
-        int[][] res = new int[3][3];
-        res = batchTestAnalyzer.batchAnalysis(batchTestFactors, sysNum);
+        // selectedMethodsList
+
+        //int[][] res = new int[3][3];
+
+        // 获取对比方法
+        ObservableList<String> methods = selectedMethodsList.getItems();
 
 
-//        for (int i = 0; i < 3; i++) {
-//            for (int j = 0; j < 3; j++) {
-//                log.debug(res[i][j]);
-//            }
-//        }
+        ArrayList<String> compareMethod = new ArrayList<>();
 
-        barChart1.setTitle("LO MODE Schedulability Chart");
-        createBar(barChart1,"MSRP",res[0][0]);
-        createBar(barChart1,"Mrsp",res[1][0]);
-        createBar(barChart1,"PWLP",res[2][0]);
+        for (String method : methods) {
+            System.out.println(method);
+            switch (method){
+                case "MSRP_Original":
+                    compareMethod.add("MSRP");
+                    break;
+                case "MSRP_Holistic":
+                    compareMethod.add("MSRPNew");
+                    break;
+                case "PWLP_Holistic":
+                    compareMethod.add("PWLP");
+                    break;
+                case "Mrsp_Original":
+                    compareMethod.add("Mrsp");
+                    break;
+                case "Mrsp_Holistic":
+                    compareMethod.add("MrspNew");
+                    break;
+            }
+        }
+
+        this.result = batchTestAnalyzer.batchAnalysis(batchTestFactors, sysNum, compareMethod);
+        this.currentIndex = 0;
+
+        //updateChartData();
+
+        // 初始化方法映射的 HashMap
+        Map<String, String> methodMap = new HashMap<>();
+
+        // 添加映射
+        methodMap.put("MSRP", "MSRP_Original");
+        methodMap.put("MSRPNew", "MSRP_Holistic");
+        methodMap.put("PWLP", "PWLP_Holistic");
+        methodMap.put("Mrsp", "Mrsp_Original");
+        methodMap.put("MrspNew", "Mrsp_Holistic");
 
 
-        barChart2.setTitle("HI MODE Schedulability Chart");
+        // 添加新数据
+        Map<String, Double> res = result.get(0);
 
-        createBar(barChart2,"MSRP",res[0][1]);
-        createBar(barChart2,"Mrsp",res[1][1]);
-        createBar(barChart2,"PWLP",res[2][1]);
+        for (Map.Entry<String, Double> entry : res.entrySet()) {
+            String labelName = methodMap.get(entry.getKey());
+            createBar(barChart1, labelName, entry.getValue());
+        }
+        barChart1.setBarGap(25);
 
-        // 创建柱状图
-        barChart3.setTitle("SWITCH MODE Schedulability Chart");
+        // 添加新数据
+        res = result.get(1);
 
-        // 创建数据系列
-        createBar(barChart3,"MSRP",res[0][2]);
-        createBar(barChart3,"Mrsp",res[1][2]);
-        createBar(barChart3,"PWLP",res[2][2]);
+        for (Map.Entry<String, Double> entry : res.entrySet()) {
+            String labelName = methodMap.get(entry.getKey());
+            createBar(barChart2, labelName, entry.getValue());
+        }
+        barChart2.setBarGap(25);
+
+        // 添加新数据
+        res = result.get(2);
+
+        for (Map.Entry<String, Double> entry : res.entrySet()) {
+            String labelName = methodMap.get(entry.getKey());
+            createBar(barChart3, labelName, entry.getValue());
+        }
+        barChart3.setBarGap(25);
+
+
+        String[] COLOR_SCHEME = {"#000080CC", "#ecb01fCC", "#76ab2fCC", "#0071bcCC", "#7d2e8dCC"};
+        int index = 0;
+        for (XYChart.Series<String, Number> series : barChart1.getData()) {
+            for(XYChart.Data data : series.getData())
+            {
+                String style = "-fx-bar-fill: " + COLOR_SCHEME[index % COLOR_SCHEME.length] + ";";
+                //data.getNode().setStyle("-fx-bar-fill: #e3d503;");
+                data.getNode().setStyle(style);
+            }
+            index++;
+
+        }
+
+
+        // 设置图例颜色
+        List<Node> legendItems = new ArrayList<>(barChart1.lookupAll("Label.chart-legend-item"));
+        for (int i = 0; i < legendItems.size(); i++) {
+            Label label = (Label) legendItems.get(i);
+            if (label != null && label.getGraphic() != null) {
+                String color = COLOR_SCHEME[i % COLOR_SCHEME.length]; // 循环使用颜色
+                label.getGraphic().setStyle("-fx-background-color: " + color + ";");
+            }
+        }
+
+        index = 0;
+        for (XYChart.Series<String, Number> series : barChart2.getData()) {
+            for(XYChart.Data data : series.getData())
+            {
+                String style = "-fx-bar-fill: " + COLOR_SCHEME[index % COLOR_SCHEME.length] + ";";
+                //data.getNode().setStyle("-fx-bar-fill: #e3d503;");
+                data.getNode().setStyle(style);
+            }
+            index++;
+
+        }
+
+
+        // 设置图例颜色
+        legendItems = new ArrayList<>(barChart2.lookupAll("Label.chart-legend-item"));
+        for (int i = 0; i < legendItems.size(); i++) {
+            Label label = (Label) legendItems.get(i);
+            if (label != null && label.getGraphic() != null) {
+                String color = COLOR_SCHEME[i % COLOR_SCHEME.length]; // 循环使用颜色
+                label.getGraphic().setStyle("-fx-background-color: " + color + ";");
+            }
+        }
+
+        index = 0;
+        for (XYChart.Series<String, Number> series : barChart3.getData()) {
+            for(XYChart.Data data : series.getData())
+            {
+                String style = "-fx-bar-fill: " + COLOR_SCHEME[index % COLOR_SCHEME.length] + ";";
+                //data.getNode().setStyle("-fx-bar-fill: #e3d503;");
+                data.getNode().setStyle(style);
+            }
+            index++;
+
+        }
+
+        // 设置图例颜色
+        legendItems = new ArrayList<>(barChart3.lookupAll("Label.chart-legend-item"));
+        for (int i = 0; i < legendItems.size(); i++) {
+            Label label = (Label) legendItems.get(i);
+            if (label != null && label.getGraphic() != null) {
+                String color = COLOR_SCHEME[i % COLOR_SCHEME.length]; // 循环使用颜色
+                label.getGraphic().setStyle("-fx-background-color: " + color + ";");
+            }
+        }
+
+
+
+
     }
 
-    public void createBar(BarChart<String, Number> barChart, String str, int num) {
+
+//    public void createBar(BarChart<String, Number> barChart, String str, double num) {
+//        XYChart.Series<String, Number> series = new XYChart.Series<>();
+//        series.setName(str);
+//        series.getData().add(new XYChart.Data<>("", num));
+//        barChart.getData().add(series);
+//
+//    }
+
+
+    public void createBar(BarChart<String, Number> barChart, String methodName, double value) {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName(str);
-        series.getData().add(new XYChart.Data<>("", num));
+        series.setName(methodName);
+        XYChart.Data<String, Number> data = new XYChart.Data<>("", value);
+
+        series.getData().add(data);
         barChart.getData().add(series);
+
     }
+
+
+
+
+
 
 
 //    void initConfigUi(){

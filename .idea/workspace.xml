@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="fa1bba22-d8c0-4167-9425-be416bc47a35" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/css/chart-style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/Analysis.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/Analysis.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/demo/tool/exterior.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/demo/tool/exterior.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/css/exterior.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/exterior.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/css/resource-factor.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/resource-factor.css" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2hu2cOcXofaO3gJPYSCFoy7VDdH" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "deliver",
+    "last_opened_file_path": "C:/Users/admin/Desktop/RTSS review/response-time-analysis-tool/response-time-analysis-tool"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="response-time-analysis-tool" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="response-time-analysis-tool" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fa1bba22-d8c0-4167-9425-be416bc47a35" name="Changes" comment="" />
+      <created>1718429720810</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1718429720810</updated>
+    </task>
+    <servers />
+  </component>
+</project>

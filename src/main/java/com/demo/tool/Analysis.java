@@ -12,6 +12,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Analysis {
     public static Logger log = LogManager.getLogger();
@@ -104,10 +107,23 @@ public class Analysis {
 //        System.out.println("done");
     }
 
-    public int[][] batchAnalysis(Factors factors, int sysNums) {
+    /** 批量测试功能 **/
+    public List<Map<String, Double>> batchAnalysis(Factors factors, int sysNums, ArrayList<String> methods) {
         log.info("Batch Test started");
 
-        var res = new int[3][3];
+        List<Map<String, Double>> results = new ArrayList<>();
+
+        Map<String, Double> lowMap = new HashMap<>();
+        Map<String, Double> highMap = new HashMap<>();
+        Map<String, Double> switchMap = new HashMap<>();
+
+        for(String method : methods){
+            lowMap.put(method, (double)0);
+            highMap.put(method, (double)0);
+            switchMap.put(method, (double)0);
+        }
+
+
 
         for (int i = 0; i < sysNums; i++) {
 
@@ -118,37 +134,53 @@ public class Analysis {
             SchedulabilityForMCS mcs = new SchedulabilityForMCS();
             mcs.tasksRefresh(tasks);
 
-            if (mcs.isSchedulableForLowMode("MSRP", tasks, resources)) {
-                res[0][0]++;
-            }
-            if (mcs.isSchedulableForHighMode("MSRP", tasks, resources)) {
-                res[0][1]++;
-            }
-            if (mcs.isSchedulableForModeSwitch("MSRP", tasks, resources)) {
-                res[0][2]++;
-            }
+            for(String method : methods){
+                if (mcs.isSchedulableForLowMode(method, tasks, resources)) {
+                    if (lowMap.containsKey(method)) {
+                        lowMap.put(method, lowMap.get(method) + 1);
+                    } else {
+                        lowMap.put(method, (double)1);
+                    }
+                }
 
-            if (mcs.isSchedulableForLowMode("Mrsp", tasks, resources)) {
-                res[1][0]++;
-            }
-            if (mcs.isSchedulableForHighMode("Mrsp", tasks, resources)) {
-                res[1][1]++;
-            }
-            if (mcs.isSchedulableForModeSwitch("Mrsp", tasks, resources)) {
-                res[1][2]++;
-            }
+                if (mcs.isSchedulableForHighMode(method, tasks, resources)) {
+                    if (highMap.containsKey(method)) {
+                        highMap.put(method, highMap.get(method) + 1);
+                    } else {
+                        highMap.put(method, (double)1);
+                    }
+                }
 
-            if (mcs.isSchedulableForLowMode("PWLP", tasks, resources)) {
-                res[2][0]++;
+                if (mcs.isSchedulableForModeSwitch(method, tasks, resources)) {
+                    if (switchMap.containsKey(method)) {
+                        switchMap.put(method, switchMap.get(method) + 1);
+                    } else {
+                        switchMap.put(method, (double)1);
+                    }
+                }
+
+
             }
-            if (mcs.isSchedulableForHighMode("PWLP", tasks, resources)) {
-                res[2][1]++;
-            }
-            if (mcs.isSchedulableForModeSwitch("PWLP", tasks, resources)) {
-                res[2][2]++;
+        }
+
+        results.add(lowMap);
+        results.add(highMap);
+        results.add(switchMap);
+
+
+
+        for (Map<String , Double> res : results) {
+            for (Map.Entry<String, Double> entry : res.entrySet()) {
+                String key = entry.getKey();
+                Double value = entry.getValue();
+                System.out.println(key + " " + value);
+                if (sysNums > 0)
+                    res.put(key, (double) res.get(key) / sysNums);
             }
         }
         log.info("Batch Test completed");
-        return res;
+        return results;
     }
+
+
 }
