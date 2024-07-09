@@ -8,9 +8,12 @@ import com.demo.tool.responsetimeanalysis.generator.PriorityGenerator;
 import com.demo.tool.responsetimeanalysis.generator.SystemGenerator;
 import com.demo.tool.responsetimeanalysis.utils.Factors;
 import com.demo.tool.responsetimeanalysis.utils.Pair;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -79,6 +82,76 @@ public class Analysis {
         log.info("System generation completed");
 
         return new Pair<>(tasks, resources);
+    }
+
+
+    public Pair<ArrayList<ArrayList<SporadicTask>>, ArrayList<Resource>> processJsonSystem(String json){
+        ArrayList<SporadicTask> tasks = new ArrayList<>();
+        ArrayList<Resource> resources = new ArrayList<>();
+        ArrayList<ArrayList<SporadicTask>> taskPartition = new ArrayList<>();
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            int coreCount = mapper.readTree(json).path("system").path("core_count").asInt();
+            tasks = mapper.readValue(mapper.readTree(json).path("tasks").toString(), new TypeReference<ArrayList<SporadicTask>>(){});
+            resources = mapper.readValue(mapper.readTree(json).path("resources").toString(), new TypeReference<ArrayList<Resource>>(){});
+
+            /** process partition json includes partition and priority */
+            for (int i = 0; i < coreCount; i++){
+                taskPartition.add(new ArrayList<>());
+            }
+
+            /** ensure partition starts from 0 in json or add allocate method for users **/
+            for (int i = 0; i < tasks.size(); i++){
+                int partition = tasks.get(i).partition;
+                if (partition < coreCount){
+                    taskPartition.get(partition).add(tasks.get(i));
+                }
+            }
+
+
+            /** process resource request */
+
+
+            for (SporadicTask task : tasks) {
+                int C_h = 0;
+                int C_l = 0;
+                if (!task.resource_required_index.isEmpty()) {
+                    // 做映射  res id 到 resources数组下标
+                    for (int i = 0; i < task.resource_required_index.size(); i++){
+                        int index = 0;
+
+                        for (int j = 0; j < resources.size(); j++){
+                            if (task.resource_required_index.get(i) == resources.get(j).id){
+                                index = j;
+                                C_l += (int) resources.get(j).csl_low * task.number_of_access_in_one_release.get(i);
+                                C_h += (int) resources.get(j).csl_high * task.number_of_access_in_one_release.get(i);
+                                resources.get(j).requested_tasks.add(task);
+                                if (!resources.get(j).partitions.contains(task.partition)) {
+                                    resources.get(j).partitions.add(task.partition);
+                                }
+                            }
+                        }
+                        task.resource_required_index.set(i, index);
+                    }
+                    task.prec_LOW = C_l;
+                    task.prec_HIGH = C_h;
+
+                    task.util_LOW = (double) (task.C_LOW + C_l) /task.period;
+                    task.util_HIGH = (double) (task.C_HIGH + C_h) /task.period;
+
+                    // 暂时不考虑json错误
+
+                }
+            }
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new Pair<>(taskPartition, resources);
+
     }
 
     public boolean chooseSystemMode(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, Factors factors) {

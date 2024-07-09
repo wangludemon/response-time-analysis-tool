@@ -8,4 +8,10 @@ open module com.example.demo {
 
     exports com.demo.tool;
     exports com.demo.tool.resource;
+
+
+    requires com.fasterxml.jackson.databind;
+
+
+
 }

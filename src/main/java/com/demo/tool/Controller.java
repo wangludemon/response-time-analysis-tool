@@ -6,7 +6,7 @@ import com.demo.tool.responsetimeanalysis.entity.Resource;
 import com.demo.tool.responsetimeanalysis.entity.SporadicTask;
 import com.demo.tool.responsetimeanalysis.utils.Factors;
 import com.demo.tool.responsetimeanalysis.utils.Pair;
-import javafx.application.Platform;
+import com.fasterxml.jackson.core.type.TypeReference;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -14,18 +14,17 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
-import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -33,15 +32,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kordamp.bootstrapfx.BootstrapFX;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.util.*;
-import java.util.stream.IntStream;
 
 import static com.demo.tool.Utils.judgeFloat;
 import static com.demo.tool.Utils.judgeInteger;
-import javafx.scene.Node;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Controller {
 
@@ -189,6 +188,84 @@ public class Controller {
 
     @FXML
     private Pagination pagination;
+
+
+
+    @FXML
+    private TextArea jsonTextArea;
+
+    @FXML
+    private void handleUpload() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JSON Files", "*.json")
+        );
+        File selectedFile = fileChooser.showOpenDialog(null);
+
+        if (selectedFile != null) {
+            loadJsonFile(selectedFile);
+        } else {
+            showAlert("File selection cancelled.");
+        }
+    }
+
+    private void loadJsonFile(File file) {
+        ObjectMapper mapper = new ObjectMapper();
+        initAnalysis();
+        try {
+            String content = new String(Files.readAllBytes(file.toPath()));
+            jsonTextArea.setText(content);
+            factors.TOTAL_PARTITIONS = mapper.readTree(content).path("system").path("core_count").asInt();
+            System.out.println(factors.TOTAL_PARTITIONS);
+            pair = new Analysis().processJsonSystem(content);
+
+            ArrayList<ArrayList<SporadicTask>> tasks = pair.getFirst();
+            for (int i = 0; i < tasks.size(); i++){
+                for (int j = 0; j<tasks.get(i).size(); j++){
+                    System.out.println(tasks.get(i).get(j).getInfo());
+                }
+            }
+            for (Resource res: pair.getSecond()){
+                System.out.println(res.id + " " + res.csl_low +" "+res.csl_high);
+            }
+
+            /* set the start icon inaccessible */
+            generateLabel.setVisible(false);
+            generating.setVisible(true);
+
+
+
+            generateTasksTable(pair.getFirst());
+//        fillTable3(pair.getSecond());
+            generateResource(pair.getSecond());
+            generatePartition();
+
+            generateDone = true;
+
+            /* set the start icon accessible */
+            generateLabel.setVisible(true);
+            generating.setVisible(false);
+
+            // show data on the screen
+//        onWakeUpTaskClicked();
+//        taskClicked();
+            generateResourceAccessButton();
+            resourceClicked();
+
+        } catch (IOException e) {
+            showAlert("Error reading file: " + e.getMessage());
+        }
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+
 
     /**
      * 判断参数是否合法并传递为double，不合法为Double.MIN_VALUE

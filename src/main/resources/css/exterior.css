@@ -28,6 +28,7 @@
 
 
 .blue-green {
+    -fx-font-size: 16px;
     -fx-background-color: rgb(16, 188, 146);
 }
 
@@ -187,4 +188,8 @@
     -fx-border-width: 1px 1px 1px 1px;
 }
 
+.title-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #333;
 
+}

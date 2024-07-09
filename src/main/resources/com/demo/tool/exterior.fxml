@@ -306,13 +306,25 @@
                         <String fx:value="round-background" />
                      </styleClass>
                   </StackPane>
-                  <StackPane fx:id="genRandom" onMouseClicked="#onGenerate" prefHeight="109.0" prefWidth="223.0" styleClass="blue-green" stylesheets="@../../../css/exterior.css">
+                  <StackPane fx:id="genRandom" onMouseClicked="#onGenerate" prefHeight="59.0" prefWidth="223.0" styleClass="blue-green" stylesheets="@../../../css/exterior.css">
                      <children>
                         <Region maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="51.0" prefWidth="230.0" stylesheets="@../../../css/exterior.css" />
                         <Label fx:id="generateLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="blue-green" text="Generate" textFill="WHITE" StackPane.alignment="CENTER" />
                         <Region fx:id="generating" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="37.0" prefWidth="34.0" style="-fx-background-color: white;" styleClass="icon-loading" stylesheets="@../../../css/exterior.css" visible="false" />
                      </children>
                   </StackPane>
+                  <VBox alignment="CENTER" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+                     <Region maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="21.0" prefWidth="230.0" stylesheets="@../../../css/exterior.css" />
+                     <Label text="JSON Upload" styleClass="title-label" stylesheets="@../../../css/exterior.css"/>
+                     <TextArea fx:id="jsonTextArea" prefHeight="200.0" prefWidth="300.0"/>
+                     <StackPane fx:id="genJson" onMouseClicked="#handleUpload" prefHeight="59.0" prefWidth="223.0" styleClass="blue-green" stylesheets="@../../../css/exterior.css">
+                        <children>
+                           <Region maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="51.0" prefWidth="230.0" stylesheets="@../../../css/exterior.css" />
+                           <Label fx:id="JsonLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="blue-green" text="Upload" textFill="WHITE" StackPane.alignment="CENTER" />
+                           <Region fx:id="Json" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="37.0" prefWidth="34.0" style="-fx-background-color: white;" styleClass="icon-loading" stylesheets="@../../../css/exterior.css" visible="false" />
+                        </children>
+                     </StackPane>
+                  </VBox>
                </children>
             </VBox>
             <VBox fx:id="page12" layoutX="230.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="544.0" prefWidth="864.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="230.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

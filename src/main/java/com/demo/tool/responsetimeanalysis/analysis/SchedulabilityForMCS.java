@@ -2,6 +2,7 @@ package com.demo.tool.responsetimeanalysis.analysis;
 
 import com.demo.tool.responsetimeanalysis.entity.Resource;
 import com.demo.tool.responsetimeanalysis.entity.SporadicTask;
+import com.demo.tool.responsetimeanalysis.generator.FlexibleWaitingPriorityAssignment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -150,6 +151,11 @@ public class SchedulabilityForMCS {
                 break;
             case "Dynamic":
                 DynamicAnalysis dynamic = new DynamicAnalysis();
+                // assign priority
+                FlexibleWaitingPriorityAssignment waiting = new FlexibleWaitingPriorityAssignment();
+                waiting.initNp(tasks, resources);
+                waiting.intiWaitingByFrequency(tasks,resources);
+                waiting.initWaitingPriorityGetSlackWithRateHelp(tasks,resources);
                 Ris = dynamic.getResponseTimeByDMPO(tasks, resources, 1, true, true, true, true, false);
                 break;
         }
@@ -254,6 +260,11 @@ public class SchedulabilityForMCS {
                 break;
             case "Dynamic":
                 DynamicAnalysisForModeSwitch modeSwitch5 = new DynamicAnalysisForModeSwitch();
+                // assign priority
+                FlexibleWaitingPriorityAssignment waiting = new FlexibleWaitingPriorityAssignment();
+                waiting.initNp(tasks, resources);
+                //waiting.intiWaitingByFrequency(tasks,resources);
+                //waiting.initWaitingPriorityGetSlackWithRateHelp(tasks,resources);
                 Ris = modeSwitch5.getResponseTimeByDMPO(highTasks, resources, lowTasks, 1, true, true, true, true, false);
         }
 
