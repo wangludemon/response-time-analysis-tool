@@ -7,14 +7,23 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+/**  MSRP analysis for mode switch from MSRP-FT: Reliable Resource Sharing on Multiprocessor Mixed-Criticality Systems
+ *  Response time including:
+ *  WCET
+ *  Resource execution time
+ *  interference: WCET + Resource execution time from high priority tasks  (LO task during R_LO )
+ *  spin Blocking: direct and indirect spin blocking
+ *  arrival blocking **/
 
 public class MSRPNewForModeSwitch {
     public static Logger log = LogManager.getLogger();
     long count = 0;
 
-    long overhead = (long) (AnalysisUtils.FIFONP_LOCK + AnalysisUtils.FIFONP_UNLOCK);
-    long CX1 = (long) AnalysisUtils.FULL_CONTEXT_SWTICH1;
-    long CX2 = (long) AnalysisUtils.FULL_CONTEXT_SWTICH2;
+    ArrayList<ArrayList<ArrayList<Long>>> requestsLeftOnRemoteP;
+
 
     public long[][] getResponseTime(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, ArrayList<ArrayList<SporadicTask>> lowTasks, boolean printDebug) {
         long[][] init_Ri = new AnalysisUtils().initResponseTime(tasks);
@@ -28,12 +37,6 @@ public class MSRPNewForModeSwitch {
 
         new AnalysisUtils().cloneList(init_Ri, response_time);
 
-        for (int i = 0; i < lowTasks.size(); i++) {
-            for (int j = 0; j < lowTasks.get(i).size(); j++) {
-                SporadicTask task = lowTasks.get(i).get(j);
-                task.spin = resourceAccessingTimeForLowTask(task, resources);
-            }
-        }
 
         /* a huge busy window to get a fixed Ri */
         while (!isEqual) {
@@ -80,11 +83,12 @@ public class MSRPNewForModeSwitch {
             for (int j = 0; j < tasks.get(i).size(); j++) {
                 SporadicTask task = tasks.get(i).get(j);
 
-                long exec_preempted_T = getSpinDelay(task, tasks, lowTasks, resources, response_time[i][j], response_time);
+                // 只有spin delay 不计算resource execution
+                task.spin = getSpinDelay(task, tasks, lowTasks, resources, response_time[i][j], response_time);
                 task.interference = highPriorityInterference(task, tasks, lowTasks, response_time[i][j]);
-                task.local = localBlocking(task, tasks, lowTasks, resources, response_time, response_time[i][j]);
+                task.local = localBlocking(task, tasks,  resources, lowTasks);
 
-                response_time_plus[i][j] = task.Ri = task.WCET + task.spin + task.indirect_spin + task.interference + task.local + exec_preempted_T + CX1;
+                response_time_plus[i][j] = task.Ri = task.WCET + task.spin  + task.interference + task.local + task.prec_HIGH;
 
                 if (task.Ri > task.deadline)
                     return response_time_plus;
@@ -94,41 +98,27 @@ public class MSRPNewForModeSwitch {
         return response_time_plus;
     }
 
-    private long resourceAccessingTimeForLowTask(SporadicTask t, ArrayList<Resource> resources) {
-        long spin_delay = 0;
-        for (int k = 0; k < t.resource_required_index.size(); k++) {
-            Resource resource = resources.get(t.resource_required_index.get(k));
-            spin_delay += resource.partitions.size() * (resource.csl_low + overhead) * t.number_of_access_in_one_release.get(k);
-        }
-        return spin_delay;
-    }
 
     /*
      * Calculate the spin delay for a given task t.
      */
     private long getSpinDelay(SporadicTask task, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<ArrayList<SporadicTask>> LowTasks, ArrayList<Resource> resources, long time, long[][] Ris) {
         long spin = 0;
-        long indirect_spin = 0, direct_spin = 0;
-        long PWLP_S = 0;
-        long exec_and_preempted_T = 0;
 
-        ArrayList<ArrayList<ArrayList<Long>>> requestsLeftOnRemoteP = new ArrayList<>();
+        // 资源， 处理器， 处理器内的csl
+        this.requestsLeftOnRemoteP = new ArrayList<>();
         for (int i = 0; i < resources.size(); i++) {
             requestsLeftOnRemoteP.add(new ArrayList<>());
             Resource res = resources.get(i);
-            ArrayList<Long> temp = getSpinDelayForOneResource(task, tasks, LowTasks, res, time, Ris, requestsLeftOnRemoteP.get(i));
-            indirect_spin += temp.get(0);
-            direct_spin += temp.get(1);
-            exec_and_preempted_T += temp.get(2);
+            // 只计算了远程阻塞
+            spin += getSpinDelayForOneResource(task, tasks, LowTasks, res, time, Ris, requestsLeftOnRemoteP.get(i));
+
         }
 
-        task.indirect_spin = indirect_spin;
-        task.spin = direct_spin;
-
-        return exec_and_preempted_T;
+        return spin;
     }
 
-    private ArrayList<Long> getSpinDelayForOneResource(SporadicTask task, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<ArrayList<SporadicTask>> LowTasks, Resource resource, long time, long[][] Ris,
+    private Long getSpinDelayForOneResource(SporadicTask task, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<ArrayList<SporadicTask>> LowTasks, Resource resource, long time, long[][] Ris,
                                                        ArrayList<ArrayList<Long>> requestsLeftOnRemoteP) {
         long spin = 0;
         long ncs = 0;
@@ -136,21 +126,18 @@ public class MSRPNewForModeSwitch {
         long ncs_hi = 0;
         long N_i_k = 0;
 
-        long indirect_spin = 0;
-        long direct_spin = 0;
 
         // 任务自身访问资源的次数
         if (task.resource_required_index.contains(resource.id - 1)) {
             N_i_k += task.number_of_access_in_one_release.get(task.resource_required_index.indexOf(resource.id - 1));
         }
 
-
         // 本地高优先级任务访问资源的次数，LowTask部分
         for (int i = 0; i < LowTasks.get(task.partition).size(); i++) {
             SporadicTask hpTask = LowTasks.get(task.partition).get(i);
             if (hpTask.priority > task.priority && hpTask.resource_required_index.contains(resource.id - 1)) {
                 int n_j_k = hpTask.number_of_access_in_one_release.get(hpTask.resource_required_index.indexOf(resource.id - 1));
-                ncs_lo += (long) Math.ceil((double) (task.Ri_LO + hpTask.Ri_LO) / (double) hpTask.period) * n_j_k;
+                ncs_lo += (long) Math.ceil((double) (task.Ri_LO) / (double) hpTask.period) * n_j_k;
             }
         }
         // 本地高优先级任务访问资源的次数，HiTask部分
@@ -158,97 +145,66 @@ public class MSRPNewForModeSwitch {
             SporadicTask hpTask = tasks.get(task.partition).get(i);
             if (hpTask.priority > task.priority && hpTask.resource_required_index.contains(resource.id - 1)) {
                 int n_h_k = hpTask.number_of_access_in_one_release.get(hpTask.resource_required_index.indexOf(resource.id - 1));
-                ncs_hi += (long) Math.ceil((double) (time + Ris[hpTask.partition][i]) / (double) hpTask.period) * n_h_k;
+                ncs_hi += (long) Math.ceil((double) (time) / (double) hpTask.period) * n_h_k;
             }
         }
 
         ncs = N_i_k + ncs_lo + ncs_hi;
 
         // RBTQ项的计算
-        if (ncs > 0) {
-            for (int i = 0; i < tasks.size(); i++) {
-                // 遍历所有远程处理器
-                if (task.partition != i) {
-                    /* For each remote partition */
-                    long number_of_low_request_by_Remote_P = 0;
-                    long number_of_high_request_by_Remote_P = 0;
-                    // 远程处理器HI任务访问资源次数
-                    for (int j = 0; j < tasks.get(i).size(); j++) {
-                        if (tasks.get(i).get(j).resource_required_index.contains(resource.id - 1)) {
-                            SporadicTask remote_task = tasks.get(i).get(j);
-                            int indexR = getIndexRInTask(remote_task, resource);
-                            long number_of_release_hi = (long) Math.ceil((double) (time + Ris[i][j]) / (double) remote_task.period);
-                            number_of_high_request_by_Remote_P += number_of_release_hi * remote_task.number_of_access_in_one_release.get(indexR);
-                        }
+
+        for (int i = 0; i < tasks.size(); i++) {
+            // 遍历所有远程处理器
+            if (task.partition != i) {
+                /* For each remote partition */
+                long number_of_low_request_by_Remote_P = 0;
+                long number_of_high_request_by_Remote_P = 0;
+                // 远程处理器HI任务访问资源次数
+                for (int j = 0; j < tasks.get(i).size(); j++) {
+                    if (tasks.get(i).get(j).resource_required_index.contains(resource.id - 1)) {
+                        SporadicTask remote_task = tasks.get(i).get(j);
+                        int indexR = getIndexRInTask(remote_task, resource);
+                        long number_of_release_hi = (long) Math.ceil((double) (time + Ris[i][j]) / (double) remote_task.period);
+                        number_of_high_request_by_Remote_P += number_of_release_hi * remote_task.number_of_access_in_one_release.get(indexR);
                     }
-                    // 远程处理器LO任务访问资源次数
-                    for (int j = 0; j < LowTasks.get(i).size(); j++) {
-                        if (LowTasks.get(i).get(j).resource_required_index.contains(resource.id - 1)) {
-                            SporadicTask remote_task = LowTasks.get(i).get(j);
-                            int indexR = getIndexRInTask(remote_task, resource);
-                            long number_of_release_lo = (long) Math.ceil((double) (task.Ri_LO + remote_task.Ri_LO) / (double) remote_task.period);
-                            number_of_low_request_by_Remote_P += number_of_release_lo * remote_task.number_of_access_in_one_release.get(indexR);
-                        }
-                    }
-
-                    long possible_spin_delay = Long.min(number_of_high_request_by_Remote_P + number_of_low_request_by_Remote_P, ncs);
-
-                    //min{local, remote m}
-                    long indirect_remote_times = number_of_high_request_by_Remote_P - ncs;
-                    indirect_spin += indirect_remote_times > 0 ?
-                            ncs * (resource.csl_high + overhead) : number_of_high_request_by_Remote_P * (resource.csl_high + overhead) + Long.min(Math.abs(indirect_remote_times), number_of_low_request_by_Remote_P) * (resource.csl_low + overhead);
-
-                    if (number_of_high_request_by_Remote_P > ncs) {
-                        indirect_spin += ncs * (resource.csl_high + overhead);
-                    } else {
-                        indirect_spin += number_of_high_request_by_Remote_P * (resource.csl_high + overhead) + Long.min(Math.abs(number_of_high_request_by_Remote_P - ncs), number_of_low_request_by_Remote_P) * (resource.csl_low + overhead);
-                    }
-                    //min{N, max(remote_m-local_higher,0)}
-//                    long direct_remote_times_judge = Long.max(indirect_remote_times, 0) + Long.min(N_i_k, Long.max(number_of_high_request_by_Remote_P + number_of_low_request_by_Remote_P - ncs, 0))
-//                            - number_of_high_request_by_Remote_P;
-//                    direct_spin += direct_remote_times_judge > 0 ?
-//                            Long.min(direct_remote_times_judge, number_of_low_request_by_Remote_P) * resource.csl
-//                            : Long.min(Math.abs(direct_remote_times_judge), number_of_high_request_by_Remote_P) * resource.csl_high;
-
-                    if (number_of_high_request_by_Remote_P + number_of_low_request_by_Remote_P - ncs <= 0)
-                        direct_spin += 0;
-                    else if (indirect_remote_times <= 0)
-                        direct_spin += Long.min(Long.max(number_of_high_request_by_Remote_P + number_of_low_request_by_Remote_P - ncs, 0), N_i_k) * (resource.csl_low + overhead);
-                    else
-                        direct_spin += indirect_remote_times > N_i_k ? N_i_k * (resource.csl_high + overhead)
-                                : indirect_remote_times * (resource.csl_high + overhead) + Long.min(N_i_k - indirect_remote_times, number_of_low_request_by_Remote_P) * (resource.csl_low + overhead);
-
-
-                    // 建立RBTQ
-                    ArrayList<Long> RBTQ = new ArrayList<>();
-                    while (number_of_high_request_by_Remote_P > 0) {
-                        RBTQ.add((resource.csl_high + overhead));
-                        number_of_high_request_by_Remote_P--;
-                    }
-                    //min{local, remote m}
-                    while (number_of_low_request_by_Remote_P > 0) {
-                        RBTQ.add((resource.csl_low + overhead));
-                        number_of_low_request_by_Remote_P--;
-                    }
-
-
-                    while (possible_spin_delay > 0) {
-                        spin += RBTQ.remove(0);
-                        possible_spin_delay--;
-                    }
-                    // 这个处理器还剩余次数的话加入
-                    if (RBTQ.size() > 0)
-                        requestsLeftOnRemoteP.add(RBTQ);
                 }
+                // 远程处理器LO任务访问资源次数
+                for (int j = 0; j < LowTasks.get(i).size(); j++) {
+                    if (LowTasks.get(i).get(j).resource_required_index.contains(resource.id - 1)) {
+                        SporadicTask remote_task = LowTasks.get(i).get(j);
+                        int indexR = getIndexRInTask(remote_task, resource);
+                        long number_of_release_lo = (long) Math.ceil((double) (task.Ri_LO + remote_task.Ri_LO) / (double) remote_task.period);
+                        number_of_low_request_by_Remote_P += number_of_release_lo * remote_task.number_of_access_in_one_release.get(indexR);
+                    }
+                }
+
+                long possible_spin_delay = Long.min(ncs, number_of_high_request_by_Remote_P+number_of_low_request_by_Remote_P);
+
+                // 建立RBTQ
+                ArrayList<Long> RBTQ = new ArrayList<>();
+                while (number_of_high_request_by_Remote_P > 0) {
+                    RBTQ.add(resource.csl_high );
+                    number_of_high_request_by_Remote_P--;
+                }
+                //min{local, remote m}
+                while (number_of_low_request_by_Remote_P > 0) {
+                    RBTQ.add(resource.csl_low );
+                    number_of_low_request_by_Remote_P--;
+                }
+
+                while (possible_spin_delay > 0) {
+                    spin += RBTQ.get(0);
+                    RBTQ.remove(0);
+                    possible_spin_delay--;
+                }
+                // 这个处理器还剩余次数的话加入
+                if (RBTQ.size() > 0)
+                    requestsLeftOnRemoteP.add(RBTQ);
             }
         }
-        //<indirect,direct, preempted+exec>
-        ArrayList<Long> spin_all = new ArrayList<>();
-        spin_all.add(indirect_spin);
-        spin_all.add(direct_spin);
-        spin_all.add(N_i_k * (resource.csl_high + overhead) + ncs_lo * (resource.csl_low + overhead) + ncs_hi * (resource.csl_high + overhead));
 
-        return spin_all;
+
+        return spin;
     }
 
 
@@ -264,36 +220,46 @@ public class MSRPNewForModeSwitch {
         // HI Task 部分
         for (SporadicTask hpTask : TasksPartition) {
             if (hpTask.priority > t.priority) {
-                interference += Math.ceil((double) (time) / (double) hpTask.period) * (hpTask.WCET + CX2);
+                interference += Math.ceil((double) (time) / (double) hpTask.period) * (hpTask.WCET + hpTask.prec_HIGH);
             }
         }
         // LO Task 部分
         for (SporadicTask hpTask : LowTasksPartition) {
             if (hpTask.priority > t.priority) {
-                interference += Math.ceil((double) (t.Ri_LO) / (double) hpTask.period) * (hpTask.WCET + CX2);
+                interference += Math.ceil((double) (t.Ri_LO) / (double) hpTask.period) * (hpTask.WCET + hpTask.prec_LOW);
             }
         }
         return interference;
     }
 
-    private long localBlocking(SporadicTask t, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<ArrayList<SporadicTask>> lowtasks, ArrayList<Resource> resources, long[][] Ris, long Ri) {
-        ArrayList<Resource> LocalBlockingResources_LO = getLocalBlockingResources(t, resources, lowtasks);
-        ArrayList<Resource> LocalBlockingResources_HI = getLocalBlockingResources(t, resources, tasks);
+    private long localBlocking(SporadicTask t, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources,  ArrayList<ArrayList<SporadicTask>> lowtasks) {
+        ArrayList<ArrayList<SporadicTask>> allTasks = new ArrayList<>();
+        for (int i = 0; i < tasks.size();i++){
+            ArrayList<SporadicTask> temp = new ArrayList<>();
+            temp.addAll(tasks.get(i));
+            temp.addAll(lowtasks.get(i));
+            allTasks.add(temp);
+        }
+
+        ArrayList<Resource> LocalBlockingResources = getLocalBlockingResources(t, resources, allTasks);
         ArrayList<Long> local_blocking_each_resource = new ArrayList<>();
 
-        for (int i = 0; i < LocalBlockingResources_LO.size(); i++) {
-            Resource res = LocalBlockingResources_LO.get(i);
-            long local_blocking = res.csl_low + getRemoteBlockingTime(t, tasks, lowtasks, LocalBlockingResources_LO, Ri, Ris);
-            local_blocking_each_resource.add(local_blocking);
-        }
-        for (int i = 0; i < LocalBlockingResources_HI.size(); i++) {
-            Resource res = LocalBlockingResources_HI.get(i);
-            long local_blocking = res.csl_high + getRemoteBlockingTime(t, tasks, lowtasks, LocalBlockingResources_HI, Ri, Ris);
+        for (int i = 0; i < LocalBlockingResources.size(); i++) {
+            Resource res = LocalBlockingResources.get(i);
+            long local_blocking = res.csl;
+
+            if (res.isGlobal) {
+                // 计算远程阻塞
+                ArrayList<ArrayList<Long>> RBTQ_P = requestsLeftOnRemoteP.get(res.id-1);
+                for (ArrayList<Long> RBTQ : RBTQ_P){
+                    local_blocking += RBTQ.get(0);
+                }
+            }
             local_blocking_each_resource.add(local_blocking);
         }
 
         if (local_blocking_each_resource.size() > 1)
-            local_blocking_each_resource.sort((l1, l2) -> -Long.compare(l1, l2));
+            local_blocking_each_resource.sort((l1, l2) -> -Double.compare(l1, l2));
 
         return local_blocking_each_resource.size() > 0 ? local_blocking_each_resource.get(0) : 0;
     }
@@ -301,40 +267,101 @@ public class MSRPNewForModeSwitch {
     private ArrayList<Resource> getLocalBlockingResources(SporadicTask task, ArrayList<Resource> resources, ArrayList<ArrayList<SporadicTask>> tasks) {
         ArrayList<Resource> localBlockingResources = new ArrayList<>();
         int partition = task.partition;
-        // low mode
+
         for (int i = 0; i < resources.size(); i++) {
             Resource resource = resources.get(i);
-
             // local resources that have a higher ceiling
             if (resource.partitions.size() == 1 && resource.partitions.get(0) == partition
-                    && resource.getCeilingForProcessor(tasks.get(task.partition)) >= task.priority) {
+                    && resource.getCeilingForProcessor(tasks.get(partition)) >= task.priority) {
                 for (int j = 0; j < resource.requested_tasks.size(); j++) {
-                    if (tasks.contains(resource.requested_tasks.get(j))) {
-                        SporadicTask LP_task = resource.requested_tasks.get(j);
-                        System.out.println("LO" + LP_task.C_LOW + "HI" + LP_task.C_HIGH);
-                        if (LP_task.partition == partition && LP_task.priority < task.priority) {
-                            localBlockingResources.add(resource);
-                            break;
-                        }
+                    SporadicTask LP_task = resource.requested_tasks.get(j);
+                    if (LP_task.partition == partition && LP_task.priority < task.priority) {
+                        localBlockingResources.add(resource);
+                        break;
                     }
                 }
             }
             // global resources that are accessed from the partition
             if (resource.partitions.contains(partition) && resource.partitions.size() > 1) {
                 for (int j = 0; j < resource.requested_tasks.size(); j++) {
-                    if (tasks.contains(resource.requested_tasks.get(j))) {
-                        SporadicTask LP_task = resource.requested_tasks.get(j);
-                        System.out.println("LO" + LP_task.C_LOW + "HI" + LP_task.C_HIGH);
-                        if (LP_task.partition == partition && LP_task.priority < task.priority) {
-                            localBlockingResources.add(resource);
-                            break;
-                        }
+                    SporadicTask LP_task = resource.requested_tasks.get(j);
+                    if (LP_task.partition == partition && LP_task.priority < task.priority) {
+                        localBlockingResources.add(resource);
+                        break;
                     }
                 }
             }
         }
+
         return localBlockingResources;
     }
+
+
+
+
+    private long localBlocking1(SporadicTask t, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<ArrayList<SporadicTask>> lowtasks, ArrayList<Resource> resources, long[][] Ris, long Ri) {
+        int partition = t.partition;
+        ArrayList<Long> local_blocking_each_resource = new ArrayList<>();
+        Set<Resource> localResource = new HashSet<>();
+        Set<Resource> globalResource = new HashSet<>();
+
+        for (int i = 0; i < resources.size(); i++) {
+            Resource resource = resources.get(i);
+            // local resources that have a higher ceiling
+            if (resource.partitions.size() == 1 && resource.partitions.get(0) == partition
+                    && resource.getCeilingForProcessor(tasks.get(partition)) >= t.priority) {
+
+                for (int j = 0; j < resource.requested_tasks.size(); j++) {  /**需要检查该数组requested_tasks  初始包括了lo和hi， 但是高关键模式需要去掉低关键任务  **/
+                    SporadicTask LP_task = resource.requested_tasks.get(j);
+                    if (LP_task.partition == partition && LP_task.priority < t.priority) {
+                        // 本地资源必然只有一个小c
+                        localResource.add(resource);
+                        if (LP_task.critical == 1)  resource.onlyLow = false;
+                    }
+                }
+            }
+            // global resources that are accessed from the partition
+            if (resource.partitions.contains(partition) && resource.partitions.size() > 1) {
+                for (int j = 0; j < resource.requested_tasks.size(); j++) {
+                    SporadicTask LP_task = resource.requested_tasks.get(j);
+                    if (LP_task.partition == partition && LP_task.priority < t.priority) {
+                        globalResource.add(resource);
+                        if (LP_task.critical == 1)  resource.onlyLow = false;
+                    }
+                }
+            }
+
+        }
+
+        for (Resource resource: localResource){
+            if (resource.onlyLow)
+                local_blocking_each_resource.add(resource.csl_low);
+            else
+                local_blocking_each_resource.add(resource.csl_high);
+        }
+
+        for (Resource resource: globalResource){
+
+            // 计算远程阻塞
+            ArrayList<ArrayList<Long>> RBTQ_P = requestsLeftOnRemoteP.get(resource.id-1);
+            long remote_blocking = 0;
+            for (ArrayList<Long> RBTQ : RBTQ_P){
+                remote_blocking += RBTQ.get(0);
+            }
+            if (resource.onlyLow)
+                local_blocking_each_resource.add(resource.csl_low+remote_blocking);
+            else
+                local_blocking_each_resource.add(resource.csl_high+remote_blocking);
+        }
+
+
+        if (local_blocking_each_resource.size() > 1)
+            local_blocking_each_resource.sort((l1, l2) -> -Long.compare(l1, l2));
+
+        return local_blocking_each_resource.size() > 0 ? local_blocking_each_resource.get(0) : 0;
+    }
+
+
 
     /*
      * Return Sum (Pm!=P(ti)) RBTQ(ncs)
@@ -394,12 +421,12 @@ public class MSRPNewForModeSwitch {
                 // 建立RBTQ
                 var RBTQ = new ArrayList<Long>();
                 while (number_of_high_request_by_Remote_P > 0) {
-                    RBTQ.add((resource.csl_high + overhead));
+                    RBTQ.add((resource.csl_high ));
                     number_of_high_request_by_Remote_P--;
                 }
                 //min{local, remote m}
                 while (number_of_low_request_by_Remote_P > 0) {
-                    RBTQ.add((resource.csl_low + overhead));
+                    RBTQ.add((resource.csl_low ));
                     number_of_low_request_by_Remote_P--;
                 }
                 RBTQs.add(RBTQ);

@@ -9,11 +9,13 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-
+/**
+ * MrsP without np
+ **/
 public class MrspNew {
     public static Logger log = LogManager.getLogger();
-    static long Cnp = 0;
-    static double Cmig = 0;
+    static long Cnp = 50;
+    static double Cmig = 6;
     long count = 0;
     long overhead = (long) (AnalysisUtils.MrsP_LOCK + AnalysisUtils.MrsP_UNLOCK);
     long CX1 = (long) AnalysisUtils.FULL_CONTEXT_SWTICH1;
@@ -33,10 +35,11 @@ public class MrspNew {
         for (Resource resource : resources) {
             if (npsection < resource.csl) npsection = resource.csl;
         }
-        Cnp = npsection;
+        Cnp = 50;
 
         // Cmig的初始化
-        Cmig = AnalysisUtils.MrsP_PREEMPTION_AND_MIGRATION;
+        //Cmig = AnalysisUtils.MrsP_PREEMPTION_AND_MIGRATION;
+        Cmig =6;
 
         for (int i = 0; i < init_Ri.length; i++) {
             response_time[i] = new long[init_Ri[i].length];

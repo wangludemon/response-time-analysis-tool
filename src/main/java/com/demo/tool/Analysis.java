@@ -167,7 +167,8 @@ public class Analysis {
                 if (mcs.isSchedulableForHighMode(factors.ANALYSIS_MODE, tasks, resources)) return true;
             }
             case "ModeSwitch" -> {
-                if (mcs.isSchedulableForModeSwitch(factors.ANALYSIS_MODE, tasks, resources)) return true;
+                if (mcs.isSchedulableForLowMode(factors.ANALYSIS_MODE, tasks, resources)
+                        && mcs.isSchedulableForModeSwitch(factors.ANALYSIS_MODE, tasks, resources)) return true;
             }
         }
         return false;
@@ -224,7 +225,7 @@ public class Analysis {
                     }
                 }
 
-                if (mcs.isSchedulableForModeSwitch(method, tasks, resources)) {
+                if (mcs.isSchedulableForLowMode(method, tasks, resources) && mcs.isSchedulableForModeSwitch(method, tasks, resources)) {
                     if (switchMap.containsKey(method)) {
                         switchMap.put(method, switchMap.get(method) + 1);
                     } else {
@@ -234,6 +235,9 @@ public class Analysis {
 
 
             }
+
+
+
         }
 
         results.add(lowMap);

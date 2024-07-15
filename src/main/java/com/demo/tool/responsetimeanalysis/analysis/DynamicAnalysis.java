@@ -9,6 +9,9 @@ import com.demo.tool.responsetimeanalysis.utils.PairComparator;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * version 1
+ **/
 public class DynamicAnalysis {
 
     /**
@@ -27,13 +30,13 @@ public class DynamicAnalysis {
         long np = 0; // The NP section length if MrsP is applied
 
         // 所有使用MrsP协议的资源中最大的csl作为npsection的值
-        long npsection = 0;
-        for (int i = 0; i < resources.size(); i++) {
-            Resource resource = resources.get(i);
-            if ((resource.protocol == 6 || resource.protocol == 7) && npsection < resource.csl)
-                npsection = resources.get(i).csl;
-        }
-        np = npsection;
+//        long npsection = 0;
+//        for (int i = 0; i < resources.size(); i++) {
+//            Resource resource = resources.get(i);
+//            if ((resource.protocol == 6 || resource.protocol == 7) && npsection < resource.csl)
+//                npsection = resources.get(i).csl;
+//        }
+//        np = npsection;
 
         long[][] init_Ri = new AnalysisUtils().initResponseTime(tasks);
         long[][] response_time = new long[tasks.size()][];
@@ -407,21 +410,21 @@ public class DynamicAnalysis {
         }
 
         for (Resource res : longLocalBlockingResource) {
-            long local_blocking = res.csl;
-            int cnt = 0;
-            for (int parition_index = 0; parition_index < res.partitions.size(); parition_index++) {
-                int partition = res.partitions.get(parition_index);
-                int norHP = getNoRFromHP(res, t, tasks.get(t.partition), Ris[t.partition], Ri, btbHit, useRi);  //高优先级任务请求次数
-                int norT = t.resource_required_index.contains(res.id - 1)
-                        ? t.number_of_access_in_one_release.get(t.resource_required_index.indexOf(res.id - 1))
-                        : 0;
-                int norR = getNoRRemote(res, tasks.get(partition), Ris[partition], Ri, btbHit, useRi);  //远程核心
-
-                if (partition != t.partition && (norHP + norT) < norR) {
-                    local_blocking += res.csl;
-                    cnt+=1;
-                }
-            }
+            long local_blocking = res.csl * res.partitions.size();
+            int cnt = res.partitions.size();
+//            for (int parition_index = 0; parition_index < res.partitions.size(); parition_index++) {
+//                int partition = res.partitions.get(parition_index);
+//                int norHP = getNoRFromHP(res, t, tasks.get(t.partition), Ris[t.partition], Ri, btbHit, useRi);  //高优先级任务请求次数
+//                int norT = t.resource_required_index.contains(res.id - 1)
+//                        ? t.number_of_access_in_one_release.get(t.resource_required_index.indexOf(res.id - 1))
+//                        : 0;
+//                int norR = getNoRRemote(res, tasks.get(partition), Ris[partition], Ri, btbHit, useRi);  //远程核心
+//
+//                if (partition != t.partition && (norHP + norT) < norR) {
+//                    local_blocking += res.csl;
+//                    cnt+=1;
+//                }
+//            }
             local_blocking_each_resource.add(new Pair<>(local_blocking, cnt));
         }
 

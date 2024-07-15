@@ -1107,6 +1107,9 @@ public class Controller {
                 case "Mrsp_Holistic":
                     compareMethod.add("MrspNew");
                     break;
+                case "Dynamic":
+                    compareMethod.add("Dynamic");
+                    break;
             }
         }
 
@@ -1124,7 +1127,7 @@ public class Controller {
         methodMap.put("PWLP", "PWLP_Holistic");
         methodMap.put("Mrsp", "Mrsp_Original");
         methodMap.put("MrspNew", "Mrsp_Holistic");
-
+        methodMap.put("Dynamic", "Dynamic");
 
         // 添加新数据
         Map<String, Double> res = result.get(0);

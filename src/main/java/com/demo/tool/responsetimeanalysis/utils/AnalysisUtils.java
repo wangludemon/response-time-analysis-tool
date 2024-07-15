@@ -61,7 +61,7 @@ public class AnalysisUtils {
 	public static double FULL_CONTEXT_SWTICH1 = (double) (CXS) / (double) 1000;
 	public static double FULL_CONTEXT_SWTICH2 = (double) (LITMUS_COMPLETE + CXS * 2 + LITMUS_RELEASE) / (double) 1000;
 
-	public long[][] initResponseTime(ArrayList<ArrayList<SporadicTask>> tasks) {
+	public static long[][] initResponseTime(ArrayList<ArrayList<SporadicTask>> tasks) {
 		long[][] response_times = new long[tasks.size()][];
 
 		for (int i = 0; i < tasks.size(); i++) {
@@ -92,7 +92,7 @@ public class AnalysisUtils {
 		return true;
 	}
 
-	public void cloneList(long[][] oldList, long[][] newList) {
+	public static void cloneList(long[][] oldList, long[][] newList) {
 		for (int i = 0; i < oldList.length; i++) {
 			System.arraycopy(oldList[i], 0, newList[i], 0, oldList[i].length);
 		}
@@ -107,7 +107,7 @@ public class AnalysisUtils {
 		return false;
 	}
 
-	public void printResponseTime(long[][] Ris, ArrayList<ArrayList<SporadicTask>> tasks) {
+	public static void printResponseTime(long[][] Ris, ArrayList<ArrayList<SporadicTask>> tasks) {
 
 		for (int i = 0; i < Ris.length; i++) {
 			for (int j = 0; j < Ris[i].length; j++) {

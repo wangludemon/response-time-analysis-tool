@@ -5,18 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa1bba22-d8c0-4167-9425-be416bc47a35" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/generator/FlexibleWaitingPriorityAssignment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/FRAP.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/FRAPForModeSwitch.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/Max_F_Min_C_SOLVER.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/NewMrsPRTAWithMCNP.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/NewMrsPWithMCNPForModeSwitch.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/RBTQItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/Analysis.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/Analysis.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/Tool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/Tool.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/DynamicAnalysis.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/DynamicAnalysis.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/DynamicAnalysisForModeSwitch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/DynamicAnalysisForModeSwitch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/MSRP.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/MSRPNew.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/MSRPNew.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/MSRPNewForModeSwitch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/MSRPNewForModeSwitch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/MrsP.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/MrspNew.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/MrspNew.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/SchedulabilityForMCS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/SchedulabilityForMCS.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/entity/Resource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/entity/Resource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/entity/SporadicTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/entity/SporadicTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/demo/tool/exterior.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/demo/tool/exterior.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/css/exterior.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/exterior.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/generator/AllocationGeneator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/generator/AllocationGeneator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/utils/AnalysisUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/utils/AnalysisUtils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,14 +58,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "deliver",
-    "last_opened_file_path": "C:/Users/admin/Desktop/HighPerformanceResourceSharingProtocol/HighPerformanceResourceSharingProtocol"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;deliver&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/admin/Desktop/分析工具/response-time-analysis-tool/src/main/java/com/demo/tool/responsetimeanalysis/analysis&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\admin\Desktop\分析工具\response-time-analysis-tool\src\main\java\com\demo\tool\responsetimeanalysis\analysis" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.demo.tool.responsetimeanalysis.analysis" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration default="true" type="JetRunConfigurationType">
       <module name="response-time-analysis-tool" />
@@ -80,5 +99,16 @@
       <updated>1718429720810</updated>
     </task>
     <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/SchedulabilityForMCS.java</url>
+          <line>283</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

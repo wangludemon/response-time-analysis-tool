@@ -116,6 +116,12 @@ public class  SporadicTask {
 		this.resource_required_index = new ArrayList<>();
 		this.number_of_access_in_one_release = new ArrayList<>();
 		this.resource_required_priority = new ArrayList<>();
+
+		Ri = 0;
+		spin = 0;
+		interference = 0;
+		local = 0;
+		Ri_HI = 0;Ri_LO = 0;Ri_Switch = 0;
 	}
 
 
@@ -146,6 +152,7 @@ public class  SporadicTask {
 
 		resource_required_index = new ArrayList<>();
 		number_of_access_in_one_release = new ArrayList<>();
+		this.resource_required_priority = new ArrayList<>();
 
 		Ri = 0;
 		spin = 0;

@@ -10,6 +10,9 @@ import com.demo.tool.responsetimeanalysis.utils.PairComparator;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * version 1
+ **/
 public class DynamicAnalysisForModeSwitch {
     public long[][] getResponseTimeByDMPO(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, ArrayList<ArrayList<SporadicTask>> lowTasks,
                                           int extendCal, boolean testSchedulability,
@@ -32,13 +35,7 @@ public class DynamicAnalysisForModeSwitch {
 
         // 所有使用MrsP协议的资源中最大的csl作为npsection的值
         // high任务：csl=csl_high  low任务为 csl_low
-        long npsection = 0;
-        for (int i = 0; i < resources.size(); i++) {
-            Resource resource = resources.get(i);
-            if ((resource.protocol == 6 || resource.protocol == 7) && npsection < resource.csl)
-                npsection = resources.get(i).csl;
-        }
-        np = npsection;
+
 
         long[][] init_Ri = new AnalysisUtils().initResponseTime(tasks);
         long[][] response_time = new long[tasks.size()][];
@@ -102,16 +99,19 @@ public class DynamicAnalysisForModeSwitch {
 
         for (int i = 0; i < response_time.length; i++) {
             response_time_plus[i] = new long[response_time[i].length];
+            System.out.println("task size " + tasks.get(i).size() + " " + response_time[i].length);
         }
 
         for (int i = 0; i < tasks.size(); i++) {
             for (int j = 0; j < tasks.get(i).size(); j++) {
-                SporadicTask task = tasks.get(i).get(j);
-                if (response_time[i][j] > task.deadline * extendCal) {
-                    response_time_plus[i][j] = response_time[i][j];
-                    continue;
-                }
 
+                SporadicTask task = tasks.get(i).get(j);
+//                if (response_time[i][j] > task.deadline * extendCal) {
+//                    response_time_plus[i][j] = response_time[i][j];
+//                    continue;
+//                }
+
+                System.out.println(i + " " + j);
                 response_time_plus[i][j] = oneCalculation(task, tasks, resources, lowTasks, response_time, response_time[i][j], oneMig, np, btbHit, useRi);
 
                 if (testSchedulability && task.Ri > task.deadline) {
@@ -292,7 +292,22 @@ public class DynamicAnalysisForModeSwitch {
             }
             // 任务\tau_x的高优先级任务
             ArrayList<SporadicTask> taskset = tasks.get(task.partition);
-            taskset.addAll(lowTasks.get(task.partition));   // lowTask
+
+            //taskset.addAll(lowTasks.get(task.partition));   // lowTask
+
+            for (int c = 0; c < taskset.size(); c++) {
+                SporadicTask high_task = taskset.get(c);
+                if (high_task.priority > task.priority) {
+                    for (int w = 0; w < high_task.resource_required_index.size(); w++) {
+                        int rIndex = high_task.resource_required_index.get(w);
+                        if (high_task_priority > high_task.resource_required_priority.get(w)) {
+                            rIndexList.add(rIndex);
+                        }
+                    }
+                }
+            }
+
+            taskset = lowTasks.get(task.partition);
             for (int c = 0; c < taskset.size(); c++) {
                 SporadicTask high_task = taskset.get(c);
                 if (high_task.priority > task.priority) {
@@ -602,32 +617,34 @@ public class DynamicAnalysisForModeSwitch {
             else
                 local_blocking = res.csl_low;
 
-            for (int parition_index = 0; parition_index < res.partitions.size(); parition_index++) {
-                int partition = res.partitions.get(parition_index);
-                //高优先级任务请求次数
-                int norHP_HI = getNoRFromHP(res, t, tasks.get(t.partition), Ris[t.partition], Ri, btbHit, useRi, false);
-                int norHP_LO = getNoRFromHP(res, t, LowTasks.get(t.partition), Ris[t.partition], Ri, btbHit, useRi, true);
-                int norHP = norHP_HI + norHP_LO;
-                //任务t访问次数
-                int norT = t.resource_required_index.contains(res.id - 1)
-                        ? t.number_of_access_in_one_release.get(t.resource_required_index.indexOf(res.id - 1))
-                        : 0;
-                //远程核心访问次数
-                int norR_HI = getNoRRemote(res, tasks.get(partition), null, Ris[partition], Ri, btbHit, useRi);
-                int norR_LO = getNoRRemote(res, null, LowTasks.get(t.partition), Ris[partition], Ri, btbHit, useRi);
-
-                if (partition != t.partition) {
-                    if ( (norHP + norT) < norR_HI ){
-                        local_blocking += res.csl_high;
-                        blocking_time+=1;
-                    }
-                    else if ( (norHP + norT) < norR_HI+norR_LO ){
-                        local_blocking += res.csl_low;
-                        blocking_time+=1;
-                    }
-
-                }
-            }
+            local_blocking += res.csl_high * (res.partitions.size()-1);
+            blocking_time = res.partitions.size();
+//            for (int parition_index = 0; parition_index < res.partitions.size(); parition_index++) {
+//                int partition = res.partitions.get(parition_index);
+//                //高优先级任务请求次数
+//                int norHP_HI = getNoRFromHP(res, t, tasks.get(t.partition), Ris[t.partition], Ri, btbHit, useRi, false);
+//                int norHP_LO = getNoRFromHP(res, t, LowTasks.get(t.partition), Ris[t.partition], Ri, btbHit, useRi, true);
+//                int norHP = norHP_HI + norHP_LO;
+//                //任务t访问次数
+//                int norT = t.resource_required_index.contains(res.id - 1)
+//                        ? t.number_of_access_in_one_release.get(t.resource_required_index.indexOf(res.id - 1))
+//                        : 0;
+//                //远程核心访问次数
+//                int norR_HI = getNoRRemote(res, tasks.get(partition), null, Ris[partition], Ri, btbHit, useRi);
+//                int norR_LO = getNoRRemote(res, null, LowTasks.get(t.partition), Ris[partition], Ri, btbHit, useRi);
+//
+//                if (partition != t.partition) {
+//                    if ( (norHP + norT) < norR_HI ){
+//                        local_blocking += res.csl_high;
+//                        blocking_time+=1;
+//                    }
+//                    else if ( (norHP + norT) < norR_HI+norR_LO ){
+//                        local_blocking += res.csl_low;
+//                        blocking_time+=1;
+//                    }
+//
+//                }
+//            }
             local_blocking_each_resource.add(new Pair<>(local_blocking, blocking_time));
         }
 
@@ -706,28 +723,5 @@ public class DynamicAnalysisForModeSwitch {
         return max_priority;
     }
 
-    private boolean isTaskIncurNPSection(SporadicTask task, ArrayList<SporadicTask> tasksOnItsParititon, ArrayList<Resource> resources) {
-        int partition = task.partition;
-        int priority = task.priority;
-        int minCeiling = 1000;
 
-        for (int i = 0; i < resources.size(); i++) {
-            Resource resource = resources.get(i);
-            // int ceiling = resource.getCeilingForProcessor(tasksOnItsParititon);
-            int max_pri = getMaxPriorityOfLocalTasks(tasksOnItsParititon);
-            int ceiling_pri = resource.getCeilingForProcessor(tasksOnItsParititon);
-            int compare_pri = (int) Math.ceil(ceiling_pri + ((double)(max_pri - ceiling_pri) / 2.0));
-            if (resource.protocol == 6 && resource.partitions.contains(partition) && minCeiling > ceiling_pri) {
-                minCeiling = ceiling_pri;
-            }
-            if (resource.protocol == 7 && resource.partitions.contains(partition) && minCeiling > compare_pri) {
-                minCeiling = compare_pri;
-            }
-        }
-
-        if (priority > minCeiling)
-            return true;
-        else
-            return false;
-    }
 }
