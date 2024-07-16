@@ -1,0 +1,110 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "system": {
+            "type": "object",
+            "properties": {
+                "core_count": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "core_count"
+            ]
+        },
+        "tasks": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "priority": {
+                        "type": "integer"
+                    },
+                    "WCET_HI": {
+                        "type": "integer"
+                    },
+                    "WCET_LO": {
+                        "type": "integer"
+                    },
+                    "deadline": {
+                        "type": "integer"
+                    },
+                    "period": {
+                        "type": "integer"
+                    },
+                    "partition": {
+                        "type": "integer"
+                    },
+                    "critical": {
+                        "type": "integer"
+                    },
+                    "resource_requests": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "resource_id": {
+                                    "type": "integer"
+                                },
+                                "request_number": {
+                                    "type": "integer"
+                                }
+                            },
+                            "additionalProperties": false,
+                            "required": [
+                                "resource_id",
+                                "request_number"
+                            ]
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "id",
+                    "priority",
+                    "WCET_HI",
+                    "WCET_LO",
+                    "deadline",
+                    "period",
+                    "partition",
+                    "critical",
+                    "resource_requests"
+                ]
+            }
+        },
+        "resources": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "csl_HI": {
+                        "type": "integer"
+                    },
+                    "csl_LO": {
+                        "type": "integer"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "id",
+                    "csl_HI",
+                    "csl_LO"
+                ]
+            }
+        }
+    },
+    "additionalProperties": false,
+    "required": [
+        "system",
+        "tasks",
+        "resources"
+    ]
+}

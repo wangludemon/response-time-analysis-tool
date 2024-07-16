@@ -14,5 +14,15 @@
 
 
 
+jpackage --type app-image -n response-time-analysis-tool -m "com.example.demo/com.demo.tool.Tool" --run
+time-image ".\target\app" --dest ".\target\build-package"
 
+
+
+jpackage --type app-image -n gateway-converter -m "com.kelton.gatewayconverter/com.kelton.gatewayconverter.BootApplication" --icon "D:\code\gateway-converter\src\main\r
+esources\logo.ico" --runtime-image ".\target\app" --dest ".\target\build-package"
+
+
+
+[使用jlink和jpackage对javafx打包成可执行程序和可安装程序 | zzk的个人知识库 (kkwalking.github.io)](https://kkwalking.github.io/person-database/java/javafx-package-introduction.html)
 

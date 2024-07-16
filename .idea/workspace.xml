@@ -1,33 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="demo:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa1bba22-d8c0-4167-9425-be416bc47a35" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/FRAP.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/FRAPForModeSwitch.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/Max_F_Min_C_SOLVER.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/NewMrsPRTAWithMCNP.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/NewMrsPWithMCNPForModeSwitch.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/RBTQItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/demo_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/schema.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/Analysis.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/Analysis.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/DynamicAnalysis.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/DynamicAnalysis.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/DynamicAnalysisForModeSwitch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/DynamicAnalysisForModeSwitch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/MSRP.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/MSRPNew.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/MSRPNew.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/MSRPNewForModeSwitch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/MSRPNewForModeSwitch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/MrsP.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/MrspNew.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/MrspNew.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/SchedulabilityForMCS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/SchedulabilityForMCS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/entity/Resource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/entity/Resource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/entity/SporadicTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/entity/SporadicTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/generator/AllocationGeneator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/generator/AllocationGeneator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/utils/AnalysisUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/utils/AnalysisUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/demo_jar/demo.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/demo_jar/demo.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,14 +49,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;deliver&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/admin/Desktop/分析工具/response-time-analysis-tool/src/main/java/com/demo/tool/responsetimeanalysis/analysis&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "deliver",
+    "last_opened_file_path": "C:/Users/admin/Desktop/分析工具/response-time-analysis-tool",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.3944365",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\admin\Desktop\分析工具\response-time-analysis-tool\src\main\java\com\demo\tool\responsetimeanalysis\analysis" />
@@ -75,6 +71,18 @@
     </key>
   </component>
   <component name="RunManager">
+    <configuration name="demo-1.0-SNAPSHOT.jar" type="JarApplication" temporary="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/target/demo-1.0-SNAPSHOT.jar" />
+      <method v="2" />
+    </configuration>
+    <configuration name="demo.jar" type="JarApplication" temporary="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/out/artifacts/demo_jar/demo.jar" />
+      <method v="2" />
+    </configuration>
+    <configuration name="response-time-analysis-tool.jar" type="JarApplication" temporary="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/out/artifacts/response-time-analysis-tool.jar" />
+      <method v="2" />
+    </configuration>
     <configuration default="true" type="JetRunConfigurationType">
       <module name="response-time-analysis-tool" />
       <method v="2">
@@ -88,6 +96,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JAR Application.demo-1.0-SNAPSHOT.jar" />
+        <item itemvalue="JAR Application.response-time-analysis-tool.jar" />
+        <item itemvalue="JAR Application.demo.jar" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
