@@ -32,7 +32,16 @@
 
 ## 工具使用教程
 
-找到xxx文件夹下xxx.exe安装程序，下载并点击安装即可。
+找到`response-time-analysis-tool\target\build-link-package`文件夹下`response-time-analysis-tool-1.0.exe`安装程序，下载并点击安装即可。
 
 
+
+## 工具打包方式
+
+- 调用`javafx`的maven插件，使用`jlink`进行打包
+  - `mvn javafx:jlink`
+- 在项目根目录下使用该命令
+  - `jpackage --type app-image -n response-time-analysis-tool -m "com.example.demo/com.demo.tool.Tool" --icon ".\src\main\resources\icon\logo.ico" --runtime-image ".\target\app" --dest ".\target\build-package"`
+- 最后，执行如下命令打包出可安装程序.exe
+  - `jpackage.exe -n response-time-analysis-tool --app-image .\target\build-package\response-time-analysis-tool  --app-version 1.0 --dest .\target\build-link-package --temp .\target\build-link-package\temp --win-dir-chooser --win-menu --win-menu-group response-time-analysis-tool  --win-shortcut`
 
