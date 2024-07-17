@@ -10,7 +10,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa1bba22-d8c0-4167-9425-be416bc47a35" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/demo_jar/demo.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/demo_jar/demo.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/NewMrsPWithMCNPForModeSwitch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/NewMrsPWithMCNPForModeSwitch.java" afterDir="false" />
