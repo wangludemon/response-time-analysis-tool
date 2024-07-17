@@ -10,15 +10,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa1bba22-d8c0-4167-9425-be416bc47a35" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/demo_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/schema.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/demo_jar/demo.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/demo_jar/demo.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/NewMrsPWithMCNPForModeSwitch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/NewMrsPWithMCNPForModeSwitch.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +59,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\admin\Desktop\分析工具\response-time-analysis-tool" />
       <recent name="C:\Users\admin\Desktop\分析工具\response-time-analysis-tool\src\main\java\com\demo\tool\responsetimeanalysis\analysis" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
