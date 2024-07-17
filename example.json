@@ -1,0 +1,83 @@
+{
+  "system": {
+    "core_count": 4
+  },
+"tasks": [
+    {
+      "id": 1,
+      "priority": 6,
+      "WCET_HI": 10,
+      "WCET_LO": 5,
+      "deadline": 50,
+      "period": 200,
+      "partition": 0,
+      "critical":1,
+      "resource_requests": [
+        {
+          "resource_id": 1,
+          "request_number": 2
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "priority": 2,
+      "WCET_HI": 15,
+      "WCET_LO": 10,
+      "deadline": 75,
+      "period": 200,
+      "partition": 0,
+      "critical":1,
+      "resource_requests": [
+        {
+          "resource_id": 2,
+          "request_number": 1
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "priority": 4,
+      "WCET_HI": 20,
+      "WCET_LO": 10,
+      "deadline": 60,
+      "period": 200,
+      "partition": 0,
+      "critical":1,
+      "resource_requests": [
+        {
+          "resource_id": 1,
+          "request_number": 3
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "priority": 8,
+      "WCET_HI": 25,
+      "WCET_LO": 15,
+      "deadline": 100,
+      "period": 200,
+      "partition": 2,
+      "critical":1,
+      "resource_requests": [
+        {
+          "resource_id": 2,
+          "request_number": 2
+        }
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "id": 1,
+      "csl_HI": 3,
+      "csl_LO": 1
+    },
+    {
+      "id": 2,
+      "csl_HI": 5,
+      "csl_LO": 2
+    }
+  ]
+}
