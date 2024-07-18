@@ -52,11 +52,11 @@ public class Analysis {
             int allocOK = 0;
 
             //保证生成的系统任务可成功分配到某个核心
-            for (int a = 0; a < 6; a++)
+            for (int a = 0; a < 4; a++)
                 if (allocGenerator.allocateTasks(tasksToAlloc, resources, factors.TOTAL_PARTITIONS, a) != null)
                     allocOK++;
 
-            if (allocOK != 6) tasksToAlloc = null;
+            if (allocOK != 4) tasksToAlloc = null;
 
         }
         log.info("tasks generated");
