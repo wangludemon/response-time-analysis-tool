@@ -26,32 +26,32 @@ public class AnalysisUtils {
 	public static int extendCalForGA = 5;
 	public static int extendCalForStatic = 1;
 
-	public static double FIFONP_LOCK = (double) (501 + 259 + 219) / (double) 1000;
-	public static double FIFONP_UNLOCK = (double) 602 / (double) 1000;
+	public static double FIFONP_LOCK = 0;
+	public static double FIFONP_UNLOCK = 0;
 
-	private static int FIFOP_DEQUEUE_IN_SCHEDULE = 703;
-	private static int FIFOP_RE_REQUEST = 744 + 216;
-	public static double FIFOP_CANCEL = (double) (FIFOP_DEQUEUE_IN_SCHEDULE + FIFOP_RE_REQUEST) / (double) 1000;
-	public static double FIFOP_LOCK = (double) (744 + 216 + 295) / (double) 1000;
+	private static int FIFOP_DEQUEUE_IN_SCHEDULE = 0;
+	private static int FIFOP_RE_REQUEST = 0;
+	public static double FIFOP_CANCEL = 0;
+	public static double FIFOP_LOCK = 0;
 
 
-	public static double FIFOP_UNLOCK = (double) 602 / (double) 1000;
+	public static double FIFOP_UNLOCK = 0;
 
-	private static int MrsP_HELP_IN_SCHEDULE = 745;
-	private static int MrsP_INSERT = 2347;
-	public static double MrsP_LOCK = (double) (794 + 259 + 219) / (double) 1000;
-	public static double MrsP_UNLOCK = (double) (744 + 65 + 571 + 262) / (double) 1000;
+	private static int MrsP_HELP_IN_SCHEDULE = 0;
+	private static int MrsP_INSERT = 0;
+	public static double MrsP_LOCK = 0;
+	public static double MrsP_UNLOCK = 0;
 
-	private static int LINUX_CONTEXT_SWTICH = 965;
-	private static int LINUX_SCHED = 845;
-	private static int LINUX_SCHED_AWAY = 736;
-	private static int LITMUS_COMPLETE = 411;
-	private static int LITMUS_RELEASE = 1383;
+	private static int LINUX_CONTEXT_SWTICH = 0;
+	private static int LINUX_SCHED = 0;
+	private static int LINUX_SCHED_AWAY = 0;
+	private static int LITMUS_COMPLETE = 0;
+	private static int LITMUS_RELEASE = 0;
 
-	private static int PFP_SCHED_CHECK = 492;
-	private static int PFP_SCHED_REQUEUE = 603;
-	private static int PFP_SCHED_SET_NEXT = 308;
-	private static int PFP_SCHED_TAKE_NEXT = 274;
+	private static int PFP_SCHED_CHECK = 0;
+	private static int PFP_SCHED_REQUEUE = 0;
+	private static int PFP_SCHED_SET_NEXT = 0;
+	private static int PFP_SCHED_TAKE_NEXT = 0;
 	private static int PFP_SCHEDULER = PFP_SCHED_CHECK + PFP_SCHED_REQUEUE + PFP_SCHED_SET_NEXT + PFP_SCHED_TAKE_NEXT;
 
 	public static double MrsP_PREEMPTION_AND_MIGRATION = (double) (LINUX_SCHED * 2 + PFP_SCHED_CHECK * 2 + MrsP_INSERT + PFP_SCHED_REQUEUE

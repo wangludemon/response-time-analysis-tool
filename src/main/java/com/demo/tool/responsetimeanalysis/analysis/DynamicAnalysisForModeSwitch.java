@@ -99,7 +99,6 @@ public class DynamicAnalysisForModeSwitch {
 
         for (int i = 0; i < response_time.length; i++) {
             response_time_plus[i] = new long[response_time[i].length];
-            System.out.println("task size " + tasks.get(i).size() + " " + response_time[i].length);
         }
 
         for (int i = 0; i < tasks.size(); i++) {
@@ -111,7 +110,6 @@ public class DynamicAnalysisForModeSwitch {
 //                    continue;
 //                }
 
-                System.out.println(i + " " + j);
                 response_time_plus[i][j] = oneCalculation(task, tasks, resources, lowTasks, response_time, response_time[i][j], oneMig, np, btbHit, useRi);
 
                 if (testSchedulability && task.Ri > task.deadline) {

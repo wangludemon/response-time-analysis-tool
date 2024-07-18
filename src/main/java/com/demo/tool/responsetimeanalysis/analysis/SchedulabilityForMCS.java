@@ -144,11 +144,11 @@ public class SchedulabilityForMCS {
                 Ris = mrsp.getResponseTime(tasks, resources, false);
                 break;
             case "MrspNew":
-                //MrspNew Mrsp = new MrspNew();
-                //Ris = Mrsp.getResponseTime(tasks, resources, true, false);
-                NewMrsPRTAWithMCNP  mrsPNew = new NewMrsPRTAWithMCNP();
+                MrspNew Mrsp = new MrspNew();
+                Ris = Mrsp.getResponseTime(tasks, resources, true, false);
+                //NewMrsPRTAWithMCNP  mrsPNew = new NewMrsPRTAWithMCNP();
 
-                Ris = mrsPNew.NewMrsPRTATest(tasks, resources, 6,50,false);
+                //Ris = mrsPNew.NewMrsPRTATest(tasks, resources, 6,50,false);
                 break;
             case "PWLP":
                 PWLPNew pwlp = new PWLPNew();
@@ -156,14 +156,14 @@ public class SchedulabilityForMCS {
                 break;
             case "Dynamic":
                 DynamicAnalysis dynamic = new DynamicAnalysis();
-                FRAP analysis = new FRAP();
+                //FRAP analysis = new FRAP();
                 // assign priority
                 FlexibleWaitingPriorityAssignment waiting = new FlexibleWaitingPriorityAssignment();
                 waiting.initNp(tasks, resources);
                 waiting.intiWaitingByFrequency(tasks,resources);
                 waiting.initWaitingPriorityGetSlackWithRateHelp(tasks,resources);
-                Ris = analysis.getResponseTimeByDMPO(tasks,resources,false,1,true,true,false);
-                //Ris = dynamic.getResponseTimeByDMPO(tasks, resources, 1, true, true, true, true, false);
+                //Ris = analysis.getResponseTimeByDMPO(tasks,resources,false,1,true,true,false);
+                Ris = dynamic.getResponseTimeByDMPO(tasks, resources, 1, true, true, true, true, false);
                 break;
         }
         log.info(rtm + " analysis completed");
@@ -269,14 +269,14 @@ public class SchedulabilityForMCS {
                 break;
             case "Dynamic":
                 DynamicAnalysisForModeSwitch modeSwitch5 = new DynamicAnalysisForModeSwitch();
-                FRAPForModeSwitch frap = new FRAPForModeSwitch();
+                //FRAPForModeSwitch frap = new FRAPForModeSwitch();
                 // assign priority
                 //FlexibleWaitingPriorityAssignment waiting = new FlexibleWaitingPriorityAssignment();
                 //waiting.initNp(tasks, resources);
                 //waiting.intiWaitingByFrequency(tasks,resources);
                 //waiting.initWaitingPriorityGetSlackWithRateHelp(tasks,resources);
-                Ris = frap.getResponseTimeByDMPO(highTasks,resources,lowTasks,false,1,true,true,false);
-                //Ris = modeSwitch5.getResponseTimeByDMPO(highTasks, resources, lowTasks, 1, true, true, true, true, false);
+                //Ris = frap.getResponseTimeByDMPO(highTasks,resources,lowTasks,false,1,true,true,false);
+                Ris = modeSwitch5.getResponseTimeByDMPO(highTasks, resources, lowTasks, 1, true, true, true, true, false);
         }
 
         log.info(rtm + " analysis completed");
