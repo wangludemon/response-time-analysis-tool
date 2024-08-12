@@ -78,7 +78,7 @@ public class MSRPOriginal {
                 task.indirect_spin = highPriorityIndirectSpin(task, tasks, response_time[i][j]);
 
 
-                response_time_plus[i][j] = task.Ri = task.WCET + task.spin + task.interference + task.local + CX1;
+                response_time_plus[i][j] = task.Ri = task.WCET + task.pure_resource_execution_time + task.spin + task.interference + task.local + CX1;
                 if (task.Ri > task.deadline)
                     return response_time_plus;
             }
@@ -100,7 +100,7 @@ public class MSRPOriginal {
         for (int i = 0; i < tasks.size(); i++) {
             if (tasks.get(i).priority > t.priority) {
                 SporadicTask hpTask = tasks.get(i);
-                interference += Math.ceil((double) (Ri) / (double) hpTask.period) * (hpTask.WCET + hpTask.spin + CX2);
+                interference += Math.ceil((double) (Ri) / (double) hpTask.period) * (hpTask.WCET + hpTask.pure_resource_execution_time+ hpTask.spin + CX2);
             }
         }
         return interference;
@@ -133,7 +133,7 @@ public class MSRPOriginal {
 
         for (int k = 0; k < t.resource_required_index.size(); k++) {
             Resource resource = resources.get(t.resource_required_index.get(k));
-            spin_delay += resource.partitions.size() * (resource.csl + overhead) * t.number_of_access_in_one_release.get(k);
+            spin_delay += (resource.partitions.size()-1) * (resource.csl + overhead) * t.number_of_access_in_one_release.get(k);
         }
         return spin_delay;
     }

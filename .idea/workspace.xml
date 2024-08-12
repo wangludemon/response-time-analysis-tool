@@ -10,12 +10,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa1bba22-d8c0-4167-9425-be416bc47a35" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/demo_jar/demo.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/demo_jar/demo.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/DynamicAnalysisForModeSwitch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/DynamicAnalysisForModeSwitch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/Analysis.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/Analysis.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/FRAP.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/FRAP.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/FRAPForModeSwitch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/FRAPForModeSwitch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/MSRPNew.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/MSRPNew.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/MSRPOriginal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/MSRPOriginal.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/NewMrsPWithMCNPForModeSwitch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/NewMrsPWithMCNPForModeSwitch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/SchedulabilityForMCS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/SchedulabilityForMCS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/utils/AnalysisUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/utils/AnalysisUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/PWLPNew.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/PWLPNew.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/PWLPNewForModeSwitch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/demo/tool/responsetimeanalysis/analysis/PWLPNewForModeSwitch.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +58,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "deliver",
-    "last_opened_file_path": "F:/编译原理/编译原理/实验/LAB0实验评分表/20337127_吴正邦_lab0等3个文件/王艺翔lab0/lab0",
+    "last_opened_file_path": "C:/Users/admin/Desktop/分析工具/response-time-analysis-tool",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.3944365",
@@ -122,33 +128,13 @@
           <option name="timeStamp" value="19" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/demo/tool/Controller.java</url>
-          <line>1038</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/demo/tool/Controller.java</url>
-          <line>1086</line>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/demo/tool/Controller.java</url>
-          <line>1079</line>
-          <option name="timeStamp" value="29" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/demo/tool/Controller.java</url>
-          <line>1091</line>
-          <option name="timeStamp" value="30" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/demo/tool/Analysis.java</url>
-          <line>201</line>
+          <line>209</line>
           <option name="timeStamp" value="31" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/demo/tool/Analysis.java</url>
-          <line>207</line>
+          <line>215</line>
           <option name="timeStamp" value="32" />
         </line-breakpoint>
       </breakpoints>

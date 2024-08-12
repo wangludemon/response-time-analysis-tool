@@ -12,8 +12,8 @@ import java.util.ArrayList;
  *  Response time including:
  *  WCET
  *  Resource execution time
- *  interference: only preemption time
- *  spin Blocking: direct and indirect
+ *  interference: preemption time : WCET + res exe
+ *  spin Blocking: direct and indirect spin blocking （暂未分开展示）
  *  arrival blocking **/
 
 public class MSRPNew {
@@ -110,7 +110,7 @@ public class MSRPNew {
             if (tasks.get(i).priority > t.priority) {
                 SporadicTask hpTask = tasks.get(i);
                 // 抢占时间
-                interference += Math.ceil((double) (Ri) / (double) hpTask.period) * (hpTask.WCET);
+                interference += Math.ceil((double) (Ri) / (double) hpTask.period) * (hpTask.WCET + hpTask.pure_resource_execution_time);
 
 //                // 间接阻塞
 //                long btb_interference = getIndirectSpinDelay(hpTask, Ri, Ris[partition][i], Ris, allTasks, resources, btbHit);
@@ -129,7 +129,7 @@ public class MSRPNew {
     private long getIndirectSpinDelay(SporadicTask hpTask, long Ri, long Rihp, long[][] Ris, ArrayList<ArrayList<SporadicTask>> allTasks,
                                       ArrayList<Resource> resources, boolean btbHit) {
         long BTBhit = 0;
-
+        // 遍历高优先级任务的访问资源
         for (int i = 0; i < hpTask.resource_required_index.size(); i++) {
             /* for each resource that a high priority task request */
             Resource resource = resources.get(hpTask.resource_required_index.get(i));
@@ -140,7 +140,7 @@ public class MSRPNew {
             int number_of_request_with_btb = (int) Math.ceil((double) (Ri) / (double) hpTask.period)
                     * hpTask.number_of_access_in_one_release.get(i);
 
-            BTBhit += number_of_request_with_btb * resource.csl;
+            //BTBhit += number_of_request_with_btb * resource.csl;    // 包含了高优先级任务执行资源的时间
 
             for (int j = 0; j < resource.partitions.size(); j++) {
                 if (resource.partitions.get(j) != hpTask.partition) {

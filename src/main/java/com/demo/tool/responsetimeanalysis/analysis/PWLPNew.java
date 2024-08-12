@@ -11,6 +11,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+/**  PWLP analysis from xxx
+ *  Response time including:
+ *  WCET
+ *  Resource execution time
+ *  interference: preemption time : WCET + res exe
+ *  spin Blocking: direct and indirect spin blocking
+ *  arrival blocking **/
+
 public class PWLPNew {
     public static Logger log = LogManager.getLogger();
     long count = 0;
@@ -75,11 +83,11 @@ public class PWLPNew {
             for (int j = 0; j < tasks.get(i).size(); j++) {
                 SporadicTask task = tasks.get(i).get(j);
                 task.spin_delay_by_preemptions = 0;
-                long exec_preempted_T = getSpinDelay(task, tasks, resources, response_time[i][j], response_time, btbHit);
+                long spin_delay = getSpinDelay(task, tasks, resources, response_time[i][j], response_time, btbHit);
                 task.interference = highPriorityInterference(task, tasks, response_time[i][j], response_time, resources);
                 task.local = localBlocking(task, tasks, resources, response_time, response_time[i][j]);
 
-                response_time_plus[i][j] = task.Ri = task.WCET + task.spin + task.indirect_spin + task.PWLP_S + task.interference + task.local + exec_preempted_T + CX1;
+                response_time_plus[i][j] = task.Ri = task.WCET + task.pure_resource_execution_time + spin_delay + task.PWLP_S + task.interference + task.local + CX1;
 
                 if (task.Ri > task.deadline)
                     return response_time_plus;
@@ -103,10 +111,10 @@ public class PWLPNew {
             ArrayList<Long> temp = getSpinDelayForOneResoruce(task, tasks, res, time, Ris, requestsLeftOnRemoteP.get(i), btbHit);
             indirect_spin += temp.get(0);
             direct_spin += temp.get(1);
-            exec_and_preempted_T += temp.get(2);
+
         }
 
-        Pair<Long, Long> spin_all = new Pair<>(indirect_spin, direct_spin);
+
 
         // preemptions
         long preemptions = 0;    // local优先级高于tau_i的任务，在tau_i响应时间内访问r^k的次数
@@ -154,14 +162,14 @@ public class PWLPNew {
         }
 
         task.PWLP_S = PWLP_S;
-        task.indirect_spin = spin_all.getFirst();
-        task.spin = spin_all.getSecond();
+        task.indirect_spin = indirect_spin;
+        task.spin = direct_spin;
         task.spin_delay_by_preemptions = request_by_preemptions;
 
-        return exec_and_preempted_T;
+        return task.indirect_spin + task.spin;
     }
 
-    //E
+    //E 返回一个资源的spin 三个变量，(indirect spin, direct spin, 任务自身的（删除））
     private ArrayList<Long> getSpinDelayForOneResoruce(SporadicTask task, ArrayList<ArrayList<SporadicTask>> tasks, Resource resource, long time, long[][] Ris,
                                                        ArrayList<Long> requestsLeftOnRemoteP, boolean btbHit) {
         long spin = 0;
@@ -176,16 +184,16 @@ public class PWLPNew {
         for (int i = 0; i < tasks.get(task.partition).size(); i++) {
             SporadicTask hpTask = tasks.get(task.partition).get(i);// local优先级高于tau_i的任务
             if (hpTask.priority > task.priority && hpTask.resource_required_index.contains(resource.id - 1)) {
-                zeta += (int) Math.ceil((double) (time + (btbHit ? Ris[hpTask.partition][i] : 0)) / (double) hpTask.period)
+                zeta += (long) (int) Math.ceil((double) (time + (btbHit ? Ris[hpTask.partition][i] : 0)) / (double) hpTask.period)
                         * hpTask.number_of_access_in_one_release.get(hpTask.resource_required_index.indexOf(resource.id - 1));
             }
         }
-        ncs = zeta;
+        ncs = zeta; // 高关键任务的访问次数
         //N_i
         if (task.resource_required_index.contains(resource.id - 1))
             n += task.number_of_access_in_one_release.get(task.resource_required_index.indexOf(resource.id - 1));
 
-        ncs += n;
+
         //remote核心的请求次数
         if (ncs > 0) {
             for (int i = 0; i < tasks.size(); i++) {
@@ -205,20 +213,17 @@ public class PWLPNew {
                     //min{N, max(remote_m-local_higher,0)}
                     direct_spin += Long.min(n, Long.max(number_of_request_by_Remote_P - zeta, 0)) * (resource.csl + overhead);
 
-                    long possible_spin_delay = Long.min(number_of_request_by_Remote_P, ncs);
 
-                    spin += possible_spin_delay;
-                    if (number_of_request_by_Remote_P - ncs > 0)    // L做准备
-                        requestsLeftOnRemoteP.add(number_of_request_by_Remote_P - ncs);
+                    if (number_of_request_by_Remote_P - ncs - n > 0)    // L做准备
+                        requestsLeftOnRemoteP.add(number_of_request_by_Remote_P - ncs - n);
                 }
             }
         }
-        //<indirect,direct, preempted+exec>
+        //<indirect,direct>
         ArrayList<Long> spin_all = new ArrayList<>();
         spin_all.add(indirect_spin);
         spin_all.add(direct_spin);
-        spin_all.add(ncs * (resource.csl + overhead));
-//        spin * resource.csl + ncs * resource.csl;
+
         return spin_all;
     }
 
@@ -237,7 +242,7 @@ public class PWLPNew {
         for (int i = 0; i < tasks.size(); i++) {
             if (tasks.get(i).priority > t.priority) {
                 SporadicTask hpTask = tasks.get(i);
-                interference += Math.ceil((double) (time) / (double) hpTask.period) * (hpTask.WCET + CX2);
+                interference += Math.ceil((double) (time) / (double) hpTask.period) * (hpTask.WCET + hpTask.pure_resource_execution_time + CX2);
             }
         }
         return interference;

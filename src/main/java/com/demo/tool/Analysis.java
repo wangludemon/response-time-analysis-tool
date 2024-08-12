@@ -84,7 +84,7 @@ public class Analysis {
         return new Pair<>(tasks, resources);
     }
 
-
+    // 读取json文件信息
     public Pair<ArrayList<ArrayList<SporadicTask>>, ArrayList<Resource>> processJsonSystem(String json){
         ArrayList<SporadicTask> tasks = new ArrayList<>();
         ArrayList<Resource> resources = new ArrayList<>();
@@ -138,9 +138,17 @@ public class Analysis {
 
                     task.util_LOW = (double) (task.C_LOW + C_l) /task.period;
                     task.util_HIGH = (double) (task.C_HIGH + C_h) /task.period;
+                    task.util = task.util_LOW;
 
                     // 暂时不考虑json错误
 
+                }else {
+                    task.prec_LOW = 0;
+                    task.prec_HIGH = 0;
+
+                    task.util_LOW = (double) (task.C_LOW) /task.period;
+                    task.util_HIGH = (double) (task.C_HIGH) /task.period;
+                    task.util = task.util_LOW;
                 }
             }
 

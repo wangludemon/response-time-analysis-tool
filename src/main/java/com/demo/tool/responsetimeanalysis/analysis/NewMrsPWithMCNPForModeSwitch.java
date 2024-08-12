@@ -8,6 +8,7 @@
 //
 //public class NewMrsPWithMCNPForModeSwitch {
 //    long count = 0;
+//    ArrayList<ArrayList<ArrayList<Long>>> RBTQ = new ArrayList<>();
 //
 //    public long[][] NewMrsPRTATest(ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources, long mig, long np,
 //                                   boolean printDebug) {
@@ -153,7 +154,8 @@
 //     * Calculate the local high priority tasks' interference for a given task t.
 //     * CI is a set of computation time of local tasks, including spin delay.
 //     */
-//    private long highPriorityInterference(SporadicTask t, ArrayList<ArrayList<SporadicTask>> allTasks, long time, long[][] Ris,
+//    private long highPriorityInterference(SporadicTask t, ArrayList<ArrayList<SporadicTask>> allTasks, ArrayList<ArrayList<SporadicTask>> lowTasks,
+//                                          long time, long[][] Ris,
 //                                          ArrayList<Resource> resources, long oneMig, long np) {
 //        long interference = 0;
 //        int partition = t.partition;
@@ -163,33 +165,83 @@
 //            if (tasks.get(i).priority > t.priority) {
 //                SporadicTask hpTask = tasks.get(i);
 //                interference += Math.ceil((double) (time) / (double) hpTask.period) * (hpTask.WCET);
-//                interference += resourceAccessingTime(hpTask, allTasks, resources, Ris, time, 0, oneMig, np);
+//                interference += resourceAccessingTime(hpTask, allTasks, resources, lowTasks, Ris, time, 0, oneMig, np);
 //            }
 //        }
+//
+//
 //        return interference;
 //    }
 //
-//    private long resourceAccessingTime(SporadicTask task, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources,
+//    // 计算E
+//    private long resourceAccessingTime1(SporadicTask task, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources,
+//                                       ArrayList<ArrayList<SporadicTask>> lowTasks,
 //                                       long[][] Ris, long time, long jitter, long oneMig, long np) {
 //        long resource_accessing_time = 0;
 //
-//        // 对任务访问的每个资源
-//        for (int i = 0; i < task.resource_required_index.size(); i++) {
-//            Resource resource = resources.get(task.resource_required_index.get(i));
 //
-//            int number_of_request_with_btb = (int) Math.ceil((double) (time + jitter) / (double) task.period)
-//                    * task.number_of_access_in_one_release.get(i);
-//            // 每次访问
-//            for (int j = 1; j < number_of_request_with_btb + 1; j++) {
-//                long oneAccess = 0;
-//                oneAccess += resourceAccessingTimeInOne(task, resource, tasks, Ris, time, jitter, j);
 //
-//                if (oneMig != 0)
-//                    oneAccess += migrationCostForSpin(oneMig, np, task, j, resource, tasks, time, Ris);
 //
-//                resource_accessing_time += oneAccess;
+//
+//
+//        return resource_accessing_time;
+//    }
+//
+//    private long MCFunction(SporadicTask task, ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<Resource> resources,
+//                       ArrayList<ArrayList<SporadicTask>> lowTasks,
+//                       long[][] Ris, long time, long jitter, long oneMig, long np){
+//        // time = Ri*
+//        // MIG(Ri, 0 , ck_hi)
+//        long migration = 0;
+//
+//        for (int i = 0; i < resources.size(); i++){
+//            Resource resource = resources.get(i);
+//            migration += MIG(task, tasks, resource, lowTasks, Ris, time, 0, oneMig, np, resources.get(i).csl_high);
+//
+//            // 本地高关键高优先级任务
+//            for (int j = 0; j < tasks.get(task.partition).size(); j++){
+//                SporadicTask hpTask = tasks.get(task.partition).get(j);
+//                /*** 文档中 jitter = Rj_HI ? ***/
+//                migration += MIG(hpTask, tasks, resource, lowTasks, Ris, time, 0, oneMig, np, resources.get(i).csl_high);
 //            }
+//
+//            // 本地低关键高优先级任务
+//            for (int j = 0; j < lowTasks.get(task.partition).size(); j++){
+//                SporadicTask hpTask = lowTasks.get(task.partition).get(j);
+//                /*** 文档中 jitter = Rj_LO ? ***/
+//                migration += MIG(hpTask, tasks, resource, lowTasks, Ris, task.Ri_LO, 0, oneMig, np, resources.get(i).csl_high);
+//            }
+//
 //        }
+//
+//
+//
+//
+//    }
+//
+//    // 只用于算每次访问的MIG
+//    private long MIG(SporadicTask task, ArrayList<ArrayList<SporadicTask>> tasks, Resource resource,
+//                     ArrayList<ArrayList<SporadicTask>> lowTasks,
+//                     long[][] Ris, long time, long jitter, long oneMig, long np, long csl) {
+//        long resource_accessing_time = 0;
+//
+//        int RIndex = getIndexRInTask(task, resource);
+//
+//        int number_of_request_with_btb = (int) Math.ceil((double) (time + jitter) / (double) task.period)
+//                * task.number_of_access_in_one_release.get(RIndex);
+//
+//        // 每次访问
+//        for (int j = 1; j < number_of_request_with_btb + 1; j++) {
+//            long oneAccess = 0;
+//            //oneAccess += resourceAccessingTimeInOne(task, resource, tasks, lowTasks, Ris, time, jitter, j);
+//
+//            if (oneMig != 0)
+//                oneAccess += migrationCostForSpin(oneMig, np, task, j, resource, tasks, lowTasks, time, Ris, csl);
+//
+//            resource_accessing_time += oneAccess;
+//        }
+//
+//
 //
 //        return resource_accessing_time;
 //    }
@@ -220,12 +272,12 @@
 //                    if (lowTasks.get(i).get(j).resource_required_index.contains(resource.id - 1)) {
 //                        SporadicTask remote_task = lowTasks.get(i).get(j);
 //                        int indexR = getIndexRInTask(remote_task, resource);
-//                        int number_of_release = (int) Math.ceil((double) (time + Ris[i][j]) / (double) remote_task.period);
+//                        int number_of_release = (int) Math.ceil((double) (task.Ri_LO + remote_task.Ri_LO) / (double) remote_task.period);
 //                        number_of_request_by_Remote_P_from_low += number_of_release * remote_task.number_of_access_in_one_release.get(indexR);
 //                    }
 //                }
 //
-//                int getNoRFromHP = getNoRFromHP(resource, task, tasks.get(task.partition), lowTasks.get(task.partition), Ris[task.partition], time);
+//                int getNoRFromHP = getNoRFromHP(resource, task, tasks.get(task.partition), lowTasks.get(task.partition), time);
 //
 //                // 剩余次数
 //                int possible_spin_delay = Math.max(number_of_request_by_Remote_P - getNoRFromHP - n + 1, 0);
@@ -247,13 +299,14 @@
 //        return number_of_access * resource.csl;
 //    }
 //
-//    private long migrationCostForArrival(long oneMig, long np, ArrayList<Integer> migration_targets, Resource resource,
-//                                         ArrayList<ArrayList<SporadicTask>> tasks) {
-//        return migrationCost(oneMig, np, migration_targets, resource, tasks);
+//    private long migrationCostForArrival(long oneMig, long np, ArrayList<Integer> migration_targets, Resource resource, SporadicTask task,  int request_number, long Ri,
+//                                         ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<ArrayList<SporadicTask>> lowTasks, long csl) {
+//        return migrationCost(oneMig, np, migration_targets, resource, request_number, task, tasks, lowTasks, csl, Ri);
 //    }
 //
 //    private long migrationCostForSpin(long oneMig, long np, SporadicTask task, int request_number, Resource resource,
-//                                      ArrayList<ArrayList<SporadicTask>> tasks, long time, long[][] Ris) {
+//                                      ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<ArrayList<SporadicTask>> lowTasks, long time, long[][] Ris,
+//                                      long csl) {
 //
 //        ArrayList<Integer> migration_targets = new ArrayList<>();
 //
@@ -262,19 +315,19 @@
 //        for (int i = 0; i < tasks.size(); i++) {
 //            if (i != task.partition) {
 //                int number_requests_left = 0;
-//                number_requests_left = getNoRRemote(resource, tasks.get(i), Ris[i], time)
-//                        - getNoRFromHP(resource, task, tasks.get(task.partition), Ris[task.partition], time) - request_number + 1;
+//                number_requests_left = getNoRRemote(task, resource, tasks.get(i), lowTasks.get(i), Ris[i], time)
+//                        - getNoRFromHP(resource, task, tasks.get(task.partition), lowTasks.get(task.partition),  time) - request_number + 1;
 //
 //                if (number_requests_left > 0)
 //                    migration_targets.add(i);
 //            }
 //        }
 //
-//        return migrationCost(oneMig, np, migration_targets, resource, tasks);
+//        return migrationCost(oneMig, np, migration_targets, resource, tasks, csl);
 //    }
 //
-//    private long migrationCost(long oneMig, long np, ArrayList<Integer> migration_targets, Resource resource,
-//                               ArrayList<ArrayList<SporadicTask>> tasks) {
+//    private long migrationCost(long oneMig, long np, ArrayList<Integer> migration_targets, Resource resource, int request_number, SporadicTask task,
+//                               ArrayList<ArrayList<SporadicTask>> tasks, ArrayList<ArrayList<SporadicTask>> lowTasks, long csl, long Ri) {
 //        long migrationCost = 0;
 //        ArrayList<Integer> migration_targets_with_P = new ArrayList<>();
 //
@@ -293,11 +346,21 @@
 //            System.exit(0);
 //        }
 //
+//        /** 如果不是task所在partition，要根据RBTQ取csl*/
+//        long ck = 0;
 //        // now we compute the migration cost for each request
 //        for (int i = 0; i < migration_targets.size(); i++) {
 //            long migration_cost_for_one_access = 0;
 //            int partition = migration_targets.get(i); // the request issued
 //            // from.
+//
+//            if (partition == task.partition)
+//                ck = csl;
+//            else  // 取RBTQ
+//            {
+//                int requestHP = getNoRFromHP(resource, task, tasks.get(task.partition), lowTasks.get(task.partition), Ri);
+//                ck = RBTQ.get(resource.id-1).get(partition).get(requestHP+request_number);
+//            }
 //
 //            // calculating migration cost
 //            // 1. If there is no preemptors on the task's partition OR there is
@@ -316,8 +379,9 @@
 //                // With NP
 //                // section applied.
 //            else {
-//                long migCostWithHP = migrationCostBusyWindow(migration_targets_with_P, oneMig, np, resource, tasks);
+//                long migCostWithHP = migrationCostBusyWindow(migration_targets_with_P, oneMig, np, resource, tasks, ck);
 //                long migCostWithNP = (long) (1 + Math.ceil((double) resource.csl / (double) np)) * oneMig;
+//                migCostWithNP = (long) (1 + Math.ceil((double) ck / (double) np)) * oneMig;
 //
 //                migration_cost_for_one_access = Math.min(migCostWithHP, migCostWithNP);
 //            }
@@ -329,15 +393,18 @@
 //    }
 //
 //    public long migrationCostBusyWindow(ArrayList<Integer> migration_targets_with_P, long oneMig, long np, Resource resource,
-//                                        ArrayList<ArrayList<SporadicTask>> tasks) {
+//                                        ArrayList<ArrayList<SporadicTask>> tasks, long csl) {
 //        long migCost = 0;
 //
-//        long migCostWithNP = (long) (1 + Math.ceil((double) resource.csl / (double) np)) * oneMig;
-//        long newMigCost = migrationCostOneCal(migration_targets_with_P, oneMig, resource.csl + migCost, resource, tasks);
+//        //long migCostWithNP = (long) (1 + Math.ceil((double) resource.csl / (double) np)) * oneMig;
+//        long migCostWithNP = (long) (1 + Math.ceil((double) csl / (double) np)) * oneMig;
+//        //long newMigCost = migrationCostOneCal(migration_targets_with_P, oneMig, resource.csl + migCost, resource, tasks);
+//        long newMigCost = migrationCostOneCal(migration_targets_with_P, oneMig, csl + migCost, resource, tasks);
 //
 //        while (migCost != newMigCost) {
 //            migCost = newMigCost;
-//            newMigCost = migrationCostOneCal(migration_targets_with_P, oneMig, resource.csl + migCost, resource, tasks);
+//            //newMigCost = migrationCostOneCal(migration_targets_with_P, oneMig, resource.csl + migCost, resource, tasks);
+//            newMigCost = migrationCostOneCal(migration_targets_with_P, oneMig, csl + migCost, resource, tasks);
 //
 //            if (newMigCost >= migCostWithNP) {
 //                return newMigCost;
@@ -396,10 +463,11 @@
 //     * gives that number of requests from HP local tasks for a resource that is
 //     * required by the given task.
 //     */
-//    private int getNoRFromHP(Resource resource, SporadicTask task, ArrayList<SporadicTask> tasks, ArrayList<SporadicTask> lowTasks, long[] Ris, long Ri) {
+//    private int getNoRFromHP(Resource resource, SporadicTask task, ArrayList<SporadicTask> tasks, ArrayList<SporadicTask> lowTasks, long Ri) {
 //        int number_of_request_by_HP = 0;
 //        int priority = task.priority;
 //
+//        // 本地高关键任务
 //        for (int i = 0; i < tasks.size(); i++) {
 //            if (tasks.get(i).priority > priority && tasks.get(i).resource_required_index.contains(resource.id - 1)) {
 //                SporadicTask hpTask = tasks.get(i);
@@ -408,7 +476,7 @@
 //                                        * hpTask.number_of_access_in_one_release.get(indexR));
 //            }
 //        }
-//        // 计算低关键任务的访问次数，累加到number_of_request_by_HP
+//        // 本地低关键任务的访问次数
 //        for (int i = 0; i < lowTasks.size(); i++) {
 //            if (lowTasks.get(i).priority > priority && lowTasks.get(i).resource_required_index.contains(resource.id - 1)) {
 //                SporadicTask hpTask = lowTasks.get(i);
@@ -421,17 +489,29 @@
 //        return number_of_request_by_HP;
 //    }
 //
-//    private int getNoRRemote(Resource resource, ArrayList<SporadicTask> tasks, long[] Ris, long Ri) {
+//    // 一个资源 一个核心上的 访问次数*
+//    private int getNoRRemote(SporadicTask task, Resource resource, ArrayList<SporadicTask> tasks, ArrayList<SporadicTask> lowTasks, long[] Ris, long Ri) {
 //        int number_of_request_by_Remote_P = 0;
 //
 //        for (int i = 0; i < tasks.size(); i++) {
 //            if (tasks.get(i).resource_required_index.contains(resource.id - 1)) {
 //                SporadicTask remote_task = tasks.get(i);
 //                int indexR = getIndexRInTask(remote_task, resource);
-//                number_of_request_by_Remote_P += Math.ceil((double) (Ri + Ris[i]) / (double) remote_task.period)
-//                        * remote_task.number_of_access_in_one_release.get(indexR);
+//                number_of_request_by_Remote_P += (int) (Math.ceil((double) (Ri + Ris[i]) / (double) remote_task.period)
+//                                        * remote_task.number_of_access_in_one_release.get(indexR));
 //            }
 //        }
+//
+//        for (int i = 0; i < lowTasks.size(); i++) {
+//            if (lowTasks.get(i).resource_required_index.contains(resource.id - 1)) {
+//                SporadicTask remote_task = lowTasks.get(i);
+//                int indexR = getIndexRInTask(remote_task, resource);
+//                number_of_request_by_Remote_P += (int) (Math.ceil((double) (task.Ri_LO + remote_task.Ri_LO) / (double) remote_task.period)
+//                        * remote_task.number_of_access_in_one_release.get(indexR));
+//            }
+//        }
+//
+//
 //        return number_of_request_by_Remote_P;
 //    }
 //

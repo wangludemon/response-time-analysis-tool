@@ -234,7 +234,6 @@ public class Controller {
             generating.setVisible(true);
 
 
-
             generateTasksTable(pair.getFirst());
 //        fillTable3(pair.getSecond());
             generateResource(pair.getSecond());
